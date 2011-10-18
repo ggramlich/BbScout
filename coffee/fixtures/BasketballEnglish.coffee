@@ -54,18 +54,17 @@ class PlayerSimulation
 	attempted: (pointType) -> @player.attempted normalizePointType(pointType)
 
 class GameSimulation
-	constructor: (@teamNameA, @teamNameB) ->
-		@teamA = @getTeam(@teamNameA)
-		@teamB = @getTeam(@teamNameB)
+	constructor: (teamNameA, teamNameB) ->
+		@game = new model.Game @getTeam(teamNameA), @getTeam(teamNameB)
 	
-	score: -> @teamA?.points() + ':' + @teamB?.points()
+	score: -> @game.score()
 	
 	playerOfScoresA: (number, teamName, pointType) ->
 		player = @getPlayer(teamName, number)
 		pointTypeOk = player?.scores normalizePointType(pointType)
 		player? and pointTypeOk
 	
-	getPlayer: (teamName, number) -> @getTeam(teamName)?.getPlayer(number)
+	getPlayer: (teamName, number) -> @game.getTeam(teamName)?.getPlayer(number)
 	
 	getTeam: (teamName) -> model.teams[teamName]
 

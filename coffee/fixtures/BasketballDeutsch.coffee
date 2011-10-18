@@ -54,18 +54,17 @@ class SpielerSimulation
 	wuerfe: (trefferArt) -> @spieler.attempted trefferArtEnglisch(trefferArt)
 
 class SpielSimulation
-	constructor: (@mannschaftsnameA, @mannschaftsnameB) ->
-		@mannschaftA = @getMannschaft(@mannschaftsnameA)
-		@mannschaftB = @getMannschaft(@mannschaftsnameB)
+	constructor: (mannschaftsnameA, mannschaftsnameB) ->
+		@spiel = new model.Game @getMannschaft(mannschaftsnameA), @getMannschaft(mannschaftsnameB)
 	
-	spielstand: -> @mannschaftA?.points() + ':' + @mannschaftB?.points()
+	spielstand: -> @spiel.score()
 	
 	spielerVonTrifft: (trikot, mannschaft, trefferArt) ->
 		spieler = @getSpieler(mannschaft, trikot)
 		trefferArtOk = spieler?.scores trefferArtEnglisch(trefferArt)
 		spieler? and trefferArtOk
 	
-	getSpieler: (mannschaft, trikot) -> @getMannschaft(mannschaft)?.getPlayer(trikot)
+	getSpieler: (mannschaft, trikot) -> @spiel.getTeam(mannschaft)?.getPlayer(trikot)
 
 	getMannschaft: (mannschaft) -> model.teams[mannschaft]
 
