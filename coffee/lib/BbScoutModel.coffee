@@ -44,7 +44,7 @@ root.BbScout.model =
 				Fieldgoal: {scored: 0, attempted: 0}
 				Threepointer: {scored: 0, attempted: 0}
 		
-		name: -> @firstName + " " + @lastName
+		name: -> "#{@firstName} #{@lastName}"
 		
 		scores: (pointType) ->
 			return false unless @validatePointType pointType
@@ -69,5 +69,4 @@ root.BbScout.model =
 		attempted: (pointType) ->
 			return false unless @validatePointType pointType
 			@stats[pointType].attempted
-
 
