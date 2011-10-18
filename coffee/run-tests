@@ -1,3 +1,8 @@
 #!/bin/sh
-NODE_PATH=lib jasmine-node --coffee spec
-
+localJasmine="node_modules/jasmine-node/bin/jasmine-node"
+jasmineArgs="--coffee spec"
+if [ -x $localJasmine ]; then
+	NODE_PATH=lib $localJasmine $jasmineArgs
+else
+	NODE_PATH=lib jasmine-node $jasmineArgs
+fi
