@@ -2,60 +2,72 @@ root = exports ? this
 root.BbScout ?= {};
 
 PointTypes =
-  Freethrow: 1
-  Fieldgoal: 2
-  Threepointer: 3
+	Freethrow: 1
+	Fieldgoal: 2
+	Threepointer: 3
 
 root.BbScout.model =
-  teams: {}
+	store:
+		games: []
 
-  Team: class
-    constructor: (@name) ->
-      @playersList = {}
+	teams: {}
 
-    addPlayer: (player) ->
-      @playersList[player.number] = player
+	Game: class
+		constructor: (@teamA, @teamB) ->
 
-    getPlayer: (number) ->
-      @playersList[number]
+		getTeam: (name) ->
+			return @teamA if @teamA.name == name
+			return @teamB if @teamB.name == name
 
-    points: ->
-      sum = 0
-      for own number, player of @playersList
-        sum += player.points
-      sum
+		score: -> "#{@teamA.points()}:#{@teamB.points()}"
 
-  Player: class
-    constructor: (@number, @firstName = '', @lastName = '', @points = 0) ->
-      @stats =
-          Freethrow: {scored: 0, attempted: 0}
-          Fieldgoal: {scored: 0, attempted: 0}
-          Threepointer: {scored: 0, attempted: 0}
+	Team: class
+		constructor: (@name) ->
+			@playersList = {}
+		
+		addPlayer: (player) ->
+			@playersList[player.number] = player
+		
+		getPlayer: (number) ->
+			@playersList[number]
+		
+		points: ->
+			sum = 0
+			for own number, player of @playersList
+				sum += player.points
+			sum
 
-    name: -> @firstName + " " + @lastName
-
-    scores: (pointType) ->
-      return false unless @validatePointType pointType
-      @points += @pointsFor(pointType)
-      @stats[pointType].scored++
-      @stats[pointType].attempted++
-    
-    misses: (pointType) ->
-      return false unless @validatePointType pointType
-      @stats[pointType].attempted++
-    
-    pointsFor: (pointType) ->
-      PointTypes[pointType]
+	Player: class
+		constructor: (@number, @firstName = '', @lastName = '', @points = 0) ->
+			@stats =
+				Freethrow: {scored: 0, attempted: 0}
+				Fieldgoal: {scored: 0, attempted: 0}
+				Threepointer: {scored: 0, attempted: 0}
+		
+		name: -> @firstName + " " + @lastName
+		
+		scores: (pointType) ->
+			return false unless @validatePointType pointType
+			@points += @pointsFor(pointType)
+			@stats[pointType].scored++
+			@stats[pointType].attempted++
+		
+		misses: (pointType) ->
+			return false unless @validatePointType pointType
+			@stats[pointType].attempted++
+		
+		pointsFor: (pointType) ->
+			PointTypes[pointType]
 
 #TODO move into PointTypes
-    validatePointType: (pointType) -> PointTypes[pointType]?
+		validatePointType: (pointType) -> PointTypes[pointType]?
 
-    scored: (pointType) ->
-      return false unless @validatePointType pointType
-      @stats[pointType].scored
-    
-    attempted: (pointType) ->
-      return false unless @validatePointType pointType
-      @stats[pointType].attempted
+		scored: (pointType) ->
+			return false unless @validatePointType pointType
+			@stats[pointType].scored
+		
+		attempted: (pointType) ->
+			return false unless @validatePointType pointType
+			@stats[pointType].attempted
 
 

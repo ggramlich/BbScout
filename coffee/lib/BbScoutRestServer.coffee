@@ -5,10 +5,9 @@ express = require 'express'
 
 app = express.createServer()
 
-games = app.resource 'games', games
+gamesResource = app.resource 'games', games#, {load: Game.load}
 
-exports.start = (port) ->
-	app.listen port
-
-exports.stop = () ->
-	app.close()
+module.exports =
+	start: (port) -> app.listen port
+	stop: -> app.close()
+	addGame: (game) -> games.addGame(game)
