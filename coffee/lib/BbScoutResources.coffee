@@ -18,7 +18,18 @@ games =
 	addGame: (game) ->
 		gamesList.push game
 
+	resetGames: -> gamesList = []
+
 	index: (request, response) ->
 		response.send JSON.stringify listGames()
+		
+	create: (request, response) ->
+		teamNames = request.body
+		teamA = new model.Team teamNames.teamA
+		teamB = new model.Team teamNames.teamB
+		game = new model.Game teamA, teamB
+		gamesList.push game
+		index = gamesList.length
+		response.redirect "/games/#{index}", 201
 
 exports.games = games
