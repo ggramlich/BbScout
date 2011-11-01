@@ -7,6 +7,18 @@ port = 8001
 base_uri = "http://localhost:#{port}"
 games_uri = "#{base_uri}/games/"
 
+game1Response =
+	uri: '/games/1'
+	teamA: 'Team A'
+	teamB: 'Team B'
+	score: '0:0'
+
+game2Response =
+	uri: '/games/2'
+	teamA: 'Team A'
+	teamB: 'Team B'
+	score: '0:0'
+
 describe 'The games resource', ->
 	beforeEach ->
 		restServer.resetGames()
@@ -23,7 +35,7 @@ describe 'The games resource', ->
 
 	it 'represents an empty list of games', ->
 		request uri: games_uri, (req, resp) ->
-			result = JSON.parse(resp.body)
+			result = JSON.parse resp.body
 			expect(result).toEqual []
 			asyncSpecDone()
 		asyncSpecWait()
@@ -36,17 +48,7 @@ describe 'The games resource', ->
 		restServer.addGame game
 		request uri: games_uri, (req, resp) ->
 			result = JSON.parse resp.body
-			expected = [
-				uri: '/games/1'
-				teamA: 'Team A'
-				teamB: 'Team B'
-				score: '0:0'
-			,
-				uri: '/games/2'
-				teamA: 'Team A'
-				teamB: 'Team B'
-				score: '0:0'
-			]
+			expected = [game1Response, game2Response]
 
 			expect(result).toEqual(expected)
 			asyncSpecDone()
@@ -60,12 +62,6 @@ describe 'The games resource', ->
 			expect(resp.headers.location).toEqual "#{base_uri}/games/1"
 			request uri: games_uri, (req, resp) ->
 				result = JSON.parse resp.body
-				expected = [
-					uri: '/games/1'
-					teamA: 'Team A'
-					teamB: 'Team B'
-					score: '0:0'
-				]
-				expect(result).toEqual(expected)
+				expect(result).toEqual([game1Response])
 				asyncSpecDone()
 		asyncSpecWait()
