@@ -6,7 +6,7 @@ express = require 'express'
 app = express.createServer()
 app.use express.bodyParser()
 
-gamesResource = app.resource 'games', games#, {load: Game.load}
+gamesResource = app.resource 'games', games, {load: games.load}
 
 module.exports =
 	start: (port) -> app.listen port

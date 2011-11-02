@@ -6,6 +6,13 @@ port = 8001
 
 base_uri = "http://localhost:#{port}"
 games_uri = "#{base_uri}/games/"
+games_uri_1 = "#{games_uri}1"
+
+createDefaultGame = ->
+	teamA = new model.Team 'Team A'
+	teamB = new model.Team 'Team B'
+	game = new model.Game teamA, teamB
+
 
 game1Response =
 	uri: '/games/1'
@@ -22,7 +29,7 @@ game2Response =
 describe 'The games resource', ->
 	beforeEach ->
 		restServer.resetGames()
-		restServer.start(port)
+		restServer.start port
 
 	afterEach ->
 		restServer.stop()
@@ -41,16 +48,12 @@ describe 'The games resource', ->
 		asyncSpecWait()
 
 	it 'represents the list of available games', ->
-		teamA = new model.Team 'Team A'
-		teamB = new model.Team 'Team B'
-		game = new model.Game teamA, teamB
+		game = createDefaultGame()
 		restServer.addGame game
 		restServer.addGame game
 		request uri: games_uri, (req, resp) ->
 			result = JSON.parse resp.body
-			expected = [game1Response, game2Response]
-
-			expect(result).toEqual(expected)
+			expect(result).toEqual [game1Response, game2Response]
 			asyncSpecDone()
 		asyncSpecWait()
 
@@ -59,9 +62,46 @@ describe 'The games resource', ->
 		options = uri: games_uri, method: 'POST', json: teamNames
 		request options, (req, resp) ->
 			expect(resp.statusCode).toEqual 201
-			expect(resp.headers.location).toEqual "#{base_uri}/games/1"
+			expect(resp.headers.location).toEqual games_uri_1
 			request uri: games_uri, (req, resp) ->
 				result = JSON.parse resp.body
-				expect(result).toEqual([game1Response])
+				expect(result).toEqual [game1Response]
 				asyncSpecDone()
 		asyncSpecWait()
+
+describe 'A single game resource', ->
+	beforeEach ->
+		restServer.resetGames()
+		restServer.addGame createDefaultGame()
+		restServer.start port
+
+	afterEach ->
+		restServer.stop()
+
+	it 'exists', ->
+		request uri: games_uri_1, (req, resp) ->
+			expect(resp.statusCode).toEqual 200
+			asyncSpecDone()
+		asyncSpecWait()
+
+	it 'does not exist for non-existing game', ->
+		request uri: "#{games_uri}2", (req, resp) ->
+			expect(resp.statusCode).toEqual 404
+			asyncSpecDone()
+		asyncSpecWait()
+
+	it 'contains the link to the team resources', ->
+		expected =
+			teamA:
+				name: 'Team A'
+				uri: '/games/1/teams/a'
+			teamB:
+				name: 'Team B'
+				uri: '/games/1/teams/b'
+			score: '0:0'
+		request uri: games_uri_1, (req, resp) ->
+			result = JSON.parse resp.body
+			expect(result).toEqual expected
+			asyncSpecDone()
+		asyncSpecWait()
+
