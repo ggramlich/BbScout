@@ -123,6 +123,37 @@ describe 'a single team resource', ->
 			asyncSpecDone()
 		asyncSpecWait()
 
-	xit 'contains all the players', ->
+	it 'can handle a bad id', ->
+		request uri: "#{game1_teamA_uri}BAD", (req, resp) ->
+			expect(resp.statusCode).toEqual 404
+			asyncSpecDone()
+		asyncSpecWait()
 
+	it 'shows a representation of the game', ->
+		expected =
+			uri: '/games/1/teams/a'
+			game:
+				uri: '/games/1'
+			name: 'Team A'
+			players: []
+			points: 0
+			
+		request uri: game1_teamA_uri, (req, resp) ->
+			result = JSON.parse resp.body
+			expect(result).toEqual expected
+			asyncSpecDone()
+		asyncSpecWait()
+
+	it 'contains the list of players', ->
+		game.teamA.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+		player1Representation =
+			uri: '/games/1/teams/a/players/41'
+			name: 'Dirk Nowitzki'
+			points: 0
+
+		request uri: game1_teamA_uri, (req, resp) ->
+			result = JSON.parse resp.body
+			expect(result.players).toEqual [player1Representation]
+			asyncSpecDone()
+		asyncSpecWait()
 
