@@ -1,29 +1,27 @@
 model = require('./BbScoutModel').BbScout.model
 
-gamesList = model.store.games
 
-gameUri = (id) -> "/games/#{id}"
-
-listGames = ->
-	gameEntry = (id, game) ->
-		uri: gameUri id
-		teamA: game.teamA.name
-		teamB: game.teamB.name
-		score: game.score()
-
-	for key, game of gamesList
-		gameEntry parseInt(key) + 1, game
-
-createGameResource = (game) ->
-	teamA:
-		name: game.teamA.name
-		uri: "#{gameUri(game.id)}/teams/a"
-	teamB:
-		name: game.teamB.name
-		uri: "#{gameUri(game.id)}/teams/b"
-	score: game.score()
 
 class GamesResource
+	# TODO make gamesList smarter (not simply an array)
+	gamesList = model.store.games
+
+	gameUri = (game) -> "/games/#{game.id}"
+
+	listGames = ->
+		for key, game of gamesList
+			createGameResource game
+	
+	createGameResource = (game) ->
+		uri: gameUri game
+		teamA:
+			name: game.teamA.name
+			uri: "#{gameUri(game)}/teams/a"
+		teamB:
+			name: game.teamB.name
+			uri: "#{gameUri(game)}/teams/b"
+		score: game.score()
+
 	addGame: (game) ->
 		gamesList.push game
 		game.id = gamesList.length
@@ -42,8 +40,8 @@ class GamesResource
 		teamA = new model.Team teamNames.teamA
 		teamB = new model.Team teamNames.teamB
 		game = new model.Game teamA, teamB
-		id = @addGame game
-		response.redirect gameUri(id), 201
+		@addGame game
+		response.redirect gameUri(game), 201
 
 	show: (request, response) ->
 		response.send JSON.stringify createGameResource(request.game)

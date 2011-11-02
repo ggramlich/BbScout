@@ -11,19 +11,27 @@ games_uri_1 = "#{games_uri}1"
 createDefaultGame = ->
 	teamA = new model.Team 'Team A'
 	teamB = new model.Team 'Team B'
-	game = new model.Game teamA, teamB
+	return new model.Game teamA, teamB
 
 
 game1Response =
 	uri: '/games/1'
-	teamA: 'Team A'
-	teamB: 'Team B'
+	teamA:
+		name: 'Team A'
+		uri: '/games/1/teams/a'
+	teamB:
+		name: 'Team B'
+		uri: '/games/1/teams/b'
 	score: '0:0'
 
 game2Response =
 	uri: '/games/2'
-	teamA: 'Team A'
-	teamB: 'Team B'
+	teamA:
+		name: 'Team A'
+		uri: '/games/2/teams/a'
+	teamB:
+		name: 'Team B'
+		uri: '/games/2/teams/b'
 	score: '0:0'
 
 describe 'The games resource', ->
@@ -48,9 +56,8 @@ describe 'The games resource', ->
 		asyncSpecWait()
 
 	it 'represents the list of available games', ->
-		game = createDefaultGame()
-		restServer.addGame game
-		restServer.addGame game
+		restServer.addGame createDefaultGame()
+		restServer.addGame createDefaultGame()
 		request uri: games_uri, (req, resp) ->
 			result = JSON.parse resp.body
 			expect(result).toEqual [game1Response, game2Response]
@@ -91,14 +98,7 @@ describe 'A single game resource', ->
 		asyncSpecWait()
 
 	it 'contains the link to the team resources', ->
-		expected =
-			teamA:
-				name: 'Team A'
-				uri: '/games/1/teams/a'
-			teamB:
-				name: 'Team B'
-				uri: '/games/1/teams/b'
-			score: '0:0'
+		expected = game1Response
 		request uri: games_uri_1, (req, resp) ->
 			result = JSON.parse resp.body
 			expect(result).toEqual expected
