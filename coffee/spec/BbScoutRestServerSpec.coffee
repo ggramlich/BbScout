@@ -6,7 +6,8 @@ port = 8001
 
 base_uri = "http://localhost:#{port}"
 games_uri = "#{base_uri}/games/"
-games_uri_1 = "#{games_uri}1"
+game1_uri = "#{games_uri}1"
+game1_teamA_uri = "#{game1_uri}/teams/a"
 
 createDefaultGame = ->
 	teamA = new model.Team 'Team A'
@@ -69,7 +70,7 @@ describe 'The games resource', ->
 		options = uri: games_uri, method: 'POST', json: teamNames
 		request options, (req, resp) ->
 			expect(resp.statusCode).toEqual 201
-			expect(resp.headers.location).toEqual games_uri_1
+			expect(resp.headers.location).toEqual game1_uri
 			request uri: games_uri, (req, resp) ->
 				result = JSON.parse resp.body
 				expect(result).toEqual [game1Response]
@@ -86,7 +87,7 @@ describe 'A single game resource', ->
 		restServer.stop()
 
 	it 'exists', ->
-		request uri: games_uri_1, (req, resp) ->
+		request uri: game1_uri, (req, resp) ->
 			expect(resp.statusCode).toEqual 200
 			asyncSpecDone()
 		asyncSpecWait()
@@ -99,9 +100,29 @@ describe 'A single game resource', ->
 
 	it 'contains the link to the team resources', ->
 		expected = game1Response
-		request uri: games_uri_1, (req, resp) ->
+		request uri: game1_uri, (req, resp) ->
 			result = JSON.parse resp.body
 			expect(result).toEqual expected
 			asyncSpecDone()
 		asyncSpecWait()
+
+describe 'a single team resource', ->
+	game = null
+	beforeEach ->
+		restServer.resetGames()
+		game = createDefaultGame()
+		restServer.addGame game
+		restServer.start port
+
+	afterEach ->
+		restServer.stop()
+
+	it 'exists', ->
+		request uri: game1_teamA_uri, (req, resp) ->
+			expect(resp.statusCode).toEqual 200
+			asyncSpecDone()
+		asyncSpecWait()
+
+	xit 'contains all the players', ->
+
 

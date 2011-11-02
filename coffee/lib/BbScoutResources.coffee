@@ -1,7 +1,5 @@
 model = require('./BbScoutModel').BbScout.model
 
-
-
 class GamesResource
 	# TODO make gamesList smarter (not simply an array)
 	gamesList = model.store.games
@@ -10,9 +8,9 @@ class GamesResource
 
 	listGames = ->
 		for key, game of gamesList
-			createGameResource game
+			gameRepresentation game
 	
-	createGameResource = (game) ->
+	gameRepresentation = (game) ->
 		uri: gameUri game
 		teamA:
 			name: game.teamA.name
@@ -44,6 +42,18 @@ class GamesResource
 		response.redirect gameUri(game), 201
 
 	show: (request, response) ->
-		response.send JSON.stringify createGameResource(request.game)
+		response.send JSON.stringify gameRepresentation(request.game)
+
+class TeamsResource
+	teamRepresentation = (team)  ->
+		team
+
+	load: (request, id, fn) ->
+		team = request.game?["team#{id.toUpperCase()}"]
+		fn(null, team)
+
+	show: (request, response) ->
+		response.send JSON.stringify teamRepresentation(request.team)
 
 exports.games = new GamesResource
+exports.teams = new TeamsResource
