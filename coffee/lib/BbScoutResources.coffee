@@ -2,6 +2,10 @@ model = require('./BbScoutModel').BbScout.model
 
 gameUri = (game) -> "/games/#{game.id}"
 
+teamUri = (team) -> "#{gameUri team.game}/teams/#{team.idInTeam}"
+
+playerUri = (player) -> "#{teamUri player.team}/players/#{player.number}"
+
 class GamesResource
 	# TODO make gamesList smarter (not simply an array)
 	gamesList = model.store.games
@@ -45,9 +49,6 @@ class GamesResource
 		response.send JSON.stringify gameRepresentation(request.game)
 
 class TeamsResource
-	teamUri = (team) -> "#{gameUri team.game}/teams/#{team.idInTeam}"
-
-	playerUri = (player) -> "#{teamUri player.team}/players/#{player.number}"
 
 	playerRepresentation = (player) ->
 		uri: playerUri player
@@ -78,5 +79,18 @@ class TeamsResource
 	show: (request, response) ->
 		response.send JSON.stringify teamRepresentation(request.team)
 
+class PlayersResource
+
+	create: (request, response) =>
+		representation = request.body
+		player = new model.Player representation.number, representation.firstName, representation.lastName, representation.points
+		request.team.addPlayer player
+		player.team = request.team
+		console.log 'added player'
+		console.dir player
+		response.redirect playerUri(player), 201
+
+
 exports.games = new GamesResource
 exports.teams = new TeamsResource
+exports.players = new PlayersResource

@@ -148,3 +148,27 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 
+	describe 'the player resource', ->
+		game = null
+		beforeEach ->
+			game = createDefaultGame()
+			restServer.addGame game
+			
+		it 'allows to add a player', ->
+			playersUri = "#{game1_teamA_uri}/players"
+			player = number: 23, firstName: 'Michael', lastName: 'Jordan', points: 2
+			playerRepresentation =
+				uri: "/games/1/teams/a/players/23"
+				name: 'Michael Jordan'
+				points: 2
+				
+			options = uri: playersUri, method: 'POST', json: player
+			request options, (req, resp) ->
+				expect(resp.statusCode).toEqual 201
+				expect(resp.headers.location).toEqual "#{playersUri}/23"
+				request uri: game1_teamA_uri, (req, resp) ->
+					result = JSON.parse resp.body
+					expect(result.players).toEqual [playerRepresentation]
+					asyncSpecDone()
+			asyncSpecWait()
+
