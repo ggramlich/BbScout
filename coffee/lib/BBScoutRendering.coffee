@@ -1,0 +1,50 @@
+class Renderer
+	gameUri: (game) => "/games/#{game.id}"
+	teamUri: (team) => "#{@gameUri team.game}/teams/#{team.idInGame}"
+	playerUri: (player) => "#{@teamUri player.team}/players/#{player.number}"
+
+	renderGame: (game) => @render @gameRepresentation game
+
+	listGames: (gamesList) =>
+		for key, game of gamesList
+			@gameRepresentation game
+
+	gameRepresentation: (game) =>
+		uri: @gameUri game
+		teamA:
+			name: game.teamA.name
+			uri: "#{@gameUri(game)}/teams/a"
+		teamB:
+			name: game.teamB.name
+			uri: "#{@gameUri(game)}/teams/b"
+		score: game.score()
+
+	renderTeam: (team) =>
+		@render @teamRepresentation team
+
+	teamRepresentation: (team) =>
+		uri: @teamUri team
+		game:
+			uri: @gameUri team.game
+		name: team.name
+		players: @listPlayers team
+		points: team.points()
+
+	listPlayers: (team) =>
+		for number, player of team.playersList
+			player.team = team
+			@playerRepresentation player
+
+	playerRepresentation: (player) =>
+		uri: @playerUri player
+		name: player.name()
+		points: player.points
+
+
+
+	render: (object) => JSON.stringify object
+
+class Parser
+
+exports.renderer = new Renderer
+exports.parser = new Parser
