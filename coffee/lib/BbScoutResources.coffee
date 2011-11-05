@@ -41,12 +41,7 @@ class TeamsResource
 class PlayersResource
 
 	create: (request, response) =>
-		representation = request.body
-		player = new model.Player representation.number, representation.firstName, representation.lastName, representation.points
-		request.team.addPlayer player
-		player.team = request.team
-		#console.log 'added player'
-		#console.dir player
+		player = parser.createPlayer request.body, request.team
 		response.redirect renderer.playerUri(player), 201
 
 

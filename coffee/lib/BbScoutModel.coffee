@@ -26,6 +26,7 @@ root.BbScout.model =
 			@playersList = {}
 		
 		addPlayer: (player) ->
+			player.team = @
 			@playersList[player.number] = player
 		
 		getPlayer: (number) ->

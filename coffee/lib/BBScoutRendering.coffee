@@ -52,7 +52,10 @@ class Parser
 		teamB = new model.Team teamNames.teamB
 		new model.Game teamA, teamB
 
-
+	createPlayer: (representation, team) =>
+		player = new model.Player representation.number, representation.firstName, representation.lastName, representation.points
+		team.addPlayer player
+		player
 
 exports.renderer = new Renderer
 exports.parser = new Parser
