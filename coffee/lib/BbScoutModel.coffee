@@ -5,6 +5,7 @@ PointTypes =
 	Freethrow: 1
 	Fieldgoal: 2
 	Threepointer: 3
+	validate: (pointType) -> @[pointType]?
 
 root.BbScout.model =
 	store:
@@ -60,8 +61,7 @@ root.BbScout.model =
 		pointsFor: (pointType) ->
 			PointTypes[pointType]
 
-#TODO move into PointTypes
-		validatePointType: (pointType) -> PointTypes[pointType]?
+		validatePointType: (pointType) -> PointTypes.validate pointType
 
 		scored: (pointType) ->
 			return false unless @validatePointType pointType
