@@ -1,3 +1,5 @@
+{model} = require('./BbScoutModel').BbScout
+
 class Renderer
 	gameUri: (game) => "/games/#{game.id}"
 	teamUri: (team) => "#{@gameUri team.game}/teams/#{team.idInGame}"
@@ -40,11 +42,17 @@ class Renderer
 		name: player.name()
 		points: player.points
 
-
-
 	render: (object) => JSON.stringify object
 
+# The parser actually takes javascript object, not JSON strings,
+# because we use express.bodyParser()
 class Parser
+	createGame: (teamNames) =>
+		teamA = new model.Team teamNames.teamA
+		teamB = new model.Team teamNames.teamB
+		new model.Game teamA, teamB
+
+
 
 exports.renderer = new Renderer
 exports.parser = new Parser

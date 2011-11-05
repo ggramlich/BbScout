@@ -1,4 +1,4 @@
-model = require('./BbScoutModel').BbScout.model
+{model} = require('./BbScoutModel').BbScout
 {renderer, parser} = require('./BBScoutRendering')
 
 class GamesResource
@@ -19,10 +19,7 @@ class GamesResource
 		response.send JSON.stringify renderer.listGames gamesList
 		
 	create: (request, response) =>
-		teamNames = request.body
-		teamA = new model.Team teamNames.teamA
-		teamB = new model.Team teamNames.teamB
-		game = new model.Game teamA, teamB
+		game = parser.createGame request.body
 		@addGame game
 		response.redirect renderer.gameUri(game), 201
 
