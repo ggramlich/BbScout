@@ -6,7 +6,10 @@
 	<RecentChanges>true</RecentChanges>
 	<Refactor>true</Refactor>
 	<Search>true</Search>
-	<Suite/>
+	<Suite>true</Suite>
+	<SymbolicLinks>
+		<DeutscheTests>.BasketballScouting.GeneralSuite.DeutscheTests</DeutscheTests>
+	</SymbolicLinks>
 	<Versions>true</Versions>
 	<WhereUsed>true</WhereUsed>
 </properties>
