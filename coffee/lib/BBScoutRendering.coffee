@@ -15,10 +15,10 @@ class Renderer
 		uri: @gameUri game
 		teamA:
 			name: game.teamA.name
-			uri: "#{@gameUri(game)}/teams/teamA"
+			uri: @teamUri game.teamA
 		teamB:
 			name: game.teamB.name
-			uri: "#{@gameUri(game)}/teams/teamB"
+			uri: @teamUri game.teamB
 		score: game.score()
 
 	renderTeam: (team) =>
