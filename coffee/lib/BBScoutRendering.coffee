@@ -37,6 +37,9 @@ class Renderer
 			player.team = team
 			@playerRepresentation player
 
+	renderPlayer: (player) =>
+		@render @playerRepresentation player
+
 	playerRepresentation: (player) =>
 		uri: @playerUri player
 		name: player.name()

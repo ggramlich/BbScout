@@ -128,7 +128,30 @@ describe 'The Rest server', ->
 		beforeEach ->
 			game = createDefaultGame()
 			restServer.addGame game
-			
+
+		it 'exists', ->
+			player = game.teamA.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+			playerUri = "#{game1_teamA_uri}/players/41"
+			request uri: playerUri, (req, resp) ->
+				expect(resp.statusCode).toEqual 200
+				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'can handle a wrong player number', ->
+			request uri: "#{game1_teamA_uri}/players/41", (req, resp) ->
+				expect(resp.statusCode).toEqual 404
+				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'shows a representation of the player', ->
+			player = game.teamA.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+			playerUri = "#{game1_teamA_uri}/players/41"
+			request uri: playerUri, (req, resp) ->
+				result = JSON.parse resp.body
+				expect(result).toEqual renderer.playerRepresentation player
+				asyncSpecDone()
+			asyncSpecWait()
+
 		it 'allows to add a player', ->
 			playersUri = "#{game1_teamA_uri}/players"
 			player = number: 23, firstName: 'Michael', lastName: 'Jordan', points: 2

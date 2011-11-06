@@ -33,7 +33,7 @@ root.BbScout.model =
 		addPlayer: (player) ->
 			player.team = @
 			@playersList[player.number] = player
-		
+
 		getPlayer: (number) ->
 			@playersList[number]
 		

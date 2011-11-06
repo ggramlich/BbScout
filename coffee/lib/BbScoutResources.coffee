@@ -42,6 +42,13 @@ class PlayersResource
 		player = parser.createPlayer request.body, request.team
 		response.redirect renderer.playerUri(player), 201
 
+	load: (request, id, fn) ->
+		player = request.team?.getPlayer id
+		fn(null, player)
+
+	show: (request, response) ->
+		response.send renderer.renderPlayer request.player
+
 
 exports.games = new GamesResource
 exports.teams = new TeamsResource
