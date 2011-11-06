@@ -8,6 +8,7 @@ class GamesResource
 	addGame: (game) ->
 		gamesList.push game
 		game.id = gamesList.length
+		game
 
 	resetGames: -> gamesList = []
 

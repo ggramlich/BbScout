@@ -1,5 +1,7 @@
 restServer = require 'BbScoutRestServer'
-model = require('BbScoutModel').BbScout.model
+{model} = require('BbScoutModel').BbScout
+{renderer, parser} = require('BBScoutRendering')
+
 request = require('request')
 
 port = 8001
@@ -15,25 +17,9 @@ createDefaultGame = ->
 	return new model.Game teamA, teamB
 
 
-game1Response =
-	uri: '/games/1'
-	teamA:
-		name: 'Team A'
-		uri: '/games/1/teams/a'
-	teamB:
-		name: 'Team B'
-		uri: '/games/1/teams/b'
-	score: '0:0'
-
-game2Response =
-	uri: '/games/2'
-	teamA:
-		name: 'Team A'
-		uri: '/games/2/teams/a'
-	teamB:
-		name: 'Team B'
-		uri: '/games/2/teams/b'
-	score: '0:0'
+game1 = createDefaultGame()
+game1.id = 1
+game1Response = renderer.gameRepresentation game1
 
 describe 'The Rest server', ->
 	beforeEach ->
@@ -58,11 +44,11 @@ describe 'The Rest server', ->
 			asyncSpecWait()
 	
 		it 'represents the list of available games', ->
-			restServer.addGame createDefaultGame()
-			restServer.addGame createDefaultGame()
+			game1 = restServer.addGame createDefaultGame()
+			game2 = restServer.addGame createDefaultGame()
 			request uri: games_uri, (req, resp) ->
 				result = JSON.parse resp.body
-				expect(result).toEqual [game1Response, game2Response]
+				expect(result).toEqual [renderer.gameRepresentation(game1), renderer.gameRepresentation(game2)]
 				asyncSpecDone()
 			asyncSpecWait()
 	
@@ -79,8 +65,9 @@ describe 'The Rest server', ->
 			asyncSpecWait()
 
 	describe 'A single game resource', ->
+		game1 = null
 		beforeEach ->
-			restServer.addGame createDefaultGame()
+			game1 = restServer.addGame createDefaultGame()
 	
 		it 'exists', ->
 			request uri: game1_uri, (req, resp) ->
@@ -95,7 +82,7 @@ describe 'The Rest server', ->
 			asyncSpecWait()
 	
 		it 'contains the link to the team resources', ->
-			expected = game1Response
+			expected = renderer.gameRepresentation game1
 			request uri: game1_uri, (req, resp) ->
 				result = JSON.parse resp.body
 				expect(result).toEqual expected
