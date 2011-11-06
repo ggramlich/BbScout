@@ -105,15 +105,8 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 	
-		it 'shows a representation of the game', ->
-			expected =
-				uri: '/games/1/teams/teamA'
-				game:
-					uri: '/games/1'
-				name: 'Team A'
-				players: []
-				points: 0
-				
+		it 'shows a representation of the team', ->
+			expected = renderer.teamRepresentation game.teamA
 			request uri: game1_teamA_uri, (req, resp) ->
 				result = JSON.parse resp.body
 				expect(result).toEqual expected
