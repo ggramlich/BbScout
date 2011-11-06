@@ -12,9 +12,9 @@ class GamesResource
 
 	resetGames: -> gamesList = []
 
-	load: (id, fn) ->
-		key = id - 1
-		fn(null, gamesList[key])
+	load: (request, id, fn) => fn(null, @getGame id)
+
+	getGame: (id) -> gamesList[id - 1]
 
 	index: (request, response) ->
 		response.send JSON.stringify renderer.listGames gamesList

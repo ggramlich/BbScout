@@ -17,10 +17,6 @@ createDefaultGame = ->
 	return new model.Game teamA, teamB
 
 
-game1 = createDefaultGame()
-game1.id = 1
-game1Response = renderer.gameRepresentation game1
-
 describe 'The Rest server', ->
 	beforeEach ->
 		restServer.resetGames()
@@ -53,15 +49,17 @@ describe 'The Rest server', ->
 			asyncSpecWait()
 	
 		it 'allows the creation of a new game', ->
+			expect(restServer.getGame 1).toBeUndefined()
+
+			expectedGame = createDefaultGame()
+			expectedGame.id = 1
 			teamNames = {teamA: 'Team A', teamB: 'Team B'}
 			options = uri: games_uri, method: 'POST', json: teamNames
 			request options, (req, resp) ->
 				expect(resp.statusCode).toEqual 201
 				expect(resp.headers.location).toEqual game1_uri
-				request uri: games_uri, (req, resp) ->
-					result = JSON.parse resp.body
-					expect(result).toEqual [game1Response]
-					asyncSpecDone()
+				expect(restServer.getGame 1).toEqual expectedGame
+				asyncSpecDone()
 			asyncSpecWait()
 
 	describe 'A single game resource', ->

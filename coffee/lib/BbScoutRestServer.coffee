@@ -15,6 +15,6 @@ teamsResource.add playersResouce
 module.exports =
 	start: (port) -> app.listen port
 	stop: -> app.close()
-	addGame: (game) -> games.addGame(game)
+	addGame: (game) -> games.addGame game
 	resetGames: -> games.resetGames()
-	
+	getGame: (id) -> games.getGame id
