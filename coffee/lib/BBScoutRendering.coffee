@@ -15,10 +15,10 @@ class Renderer
 		uri: @gameUri game
 		teamA:
 			name: game.teamA.name
-			uri: "#{@gameUri(game)}/teams/a"
+			uri: "#{@gameUri(game)}/teams/teamA"
 		teamB:
 			name: game.teamB.name
-			uri: "#{@gameUri(game)}/teams/b"
+			uri: "#{@gameUri(game)}/teams/teamB"
 		score: game.score()
 
 	renderTeam: (team) =>
@@ -40,6 +40,8 @@ class Renderer
 	playerRepresentation: (player) =>
 		uri: @playerUri player
 		name: player.name()
+		firstName: player.firstName
+		lastName: player.lastName
 		points: player.points
 
 	render: (object) => JSON.stringify object

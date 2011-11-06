@@ -30,10 +30,7 @@ class GamesResource
 class TeamsResource
 
 	load: (request, id, fn) ->
-		team = request.game?["team#{id.toUpperCase()}"]
-		if team?
-			team.game = request.game
-			team.idInGame = id
+		team = request.game?[id]
 		fn(null, team)
 
 	show: (request, response) ->

@@ -9,7 +9,7 @@ port = 8001
 base_uri = "http://localhost:#{port}"
 games_uri = "#{base_uri}/games/"
 game1_uri = "#{games_uri}1"
-game1_teamA_uri = "#{game1_uri}/teams/a"
+game1_teamA_uri = "#{game1_uri}/teams/teamA"
 
 createDefaultGame = ->
 	teamA = new model.Team 'Team A'
@@ -107,7 +107,7 @@ describe 'The Rest server', ->
 	
 		it 'shows a representation of the game', ->
 			expected =
-				uri: '/games/1/teams/a'
+				uri: '/games/1/teams/teamA'
 				game:
 					uri: '/games/1'
 				name: 'Team A'
@@ -121,11 +121,8 @@ describe 'The Rest server', ->
 			asyncSpecWait()
 	
 		it 'contains the list of players', ->
-			game.teamA.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
-			player1Representation =
-				uri: '/games/1/teams/a/players/41'
-				name: 'Dirk Nowitzki'
-				points: 0
+			player = game.teamA.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+			player1Representation = renderer.playerRepresentation player
 	
 			request uri: game1_teamA_uri, (req, resp) ->
 				result = JSON.parse resp.body
@@ -142,18 +139,12 @@ describe 'The Rest server', ->
 		it 'allows to add a player', ->
 			playersUri = "#{game1_teamA_uri}/players"
 			player = number: 23, firstName: 'Michael', lastName: 'Jordan', points: 2
-			playerRepresentation =
-				uri: "/games/1/teams/a/players/23"
-				name: 'Michael Jordan'
-				points: 2
 				
 			options = uri: playersUri, method: 'POST', json: player
 			request options, (req, resp) ->
 				expect(resp.statusCode).toEqual 201
 				expect(resp.headers.location).toEqual "#{playersUri}/23"
-				request uri: game1_teamA_uri, (req, resp) ->
-					result = JSON.parse resp.body
-					expect(result.players).toEqual [playerRepresentation]
-					asyncSpecDone()
+				expect(game.teamA.getPlayer(player.number).name()).toBe 'Michael Jordan'
+				asyncSpecDone()
 			asyncSpecWait()
 

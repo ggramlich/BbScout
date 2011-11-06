@@ -15,6 +15,10 @@ root.BbScout.model =
 
 	Game: class
 		constructor: (@teamA, @teamB) ->
+			@teamA.idInGame = 'teamA'
+			@teamA.game = @
+			@teamB.idInGame = 'teamB'
+			@teamB.game = @
 
 		getTeam: (name) ->
 			return @teamA if @teamA.name == name

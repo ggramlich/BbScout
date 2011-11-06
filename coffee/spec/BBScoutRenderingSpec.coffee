@@ -1,25 +1,34 @@
 {model} = require('BbScoutModel').BbScout
 {renderer, parser} = require 'BBScoutRendering'
 
-createDefaultGame = ->
-	teamA = new model.Team 'Team A'
-	teamB = new model.Team 'Team B'
-	return new model.Game teamA, teamB
+teamA = new model.Team 'Team A'
+teamB = new model.Team 'Team B'
+game = new model.Game teamA, teamB
+
+game.id = 1
 
 describe 'the renderer', ->
 	it 'should represent a game', ->
-		game = createDefaultGame()
-		game.id = 1
 		representation = renderer.gameRepresentation game
-		expectedRepresentation =
+
+		expect(representation).toEqual
 			uri: '/games/1'
 			teamA:
 				name: 'Team A'
-				uri: '/games/1/teams/a'
+				uri: '/games/1/teams/teamA'
 			teamB:
 				name: 'Team B'
-				uri: '/games/1/teams/b'
+				uri: '/games/1/teams/teamB'
 			score: '0:0'
 
-		expect(representation).toEqual expectedRepresentation
-
+	it 'should represent a player', ->
+		player = new model.Player 23, 'Michael', 'Jordan'
+		teamA.addPlayer player
+		representation = renderer.playerRepresentation player
+		expect(representation).toEqual
+			uri: '/games/1/teams/teamA/players/23'
+			name: 'Michael Jordan'
+			firstName: 'Michael'
+			lastName: 'Jordan'
+			points: 0
+			
