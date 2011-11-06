@@ -164,3 +164,24 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 
+	describe 'the events resource', ->
+		game = player = null
+		beforeEach ->
+			game = createDefaultGame()
+			restServer.addGame game
+			player = game.teamA.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+
+		it 'should allow to score goals', ->
+			eventsUri = "#{game1_teamA_uri}/players/41/events"
+			event =
+				action: 'scores'
+				argument: 'Fieldgoal'
+
+			options = uri: eventsUri, method: 'POST', json: event
+			request options, (req, resp) ->
+				expect(resp.statusCode).toEqual 201
+				expect(resp.headers.location).toEqual "#{game1_teamA_uri}/players/41"
+				expect(player.points).toBe 2
+				asyncSpecDone()
+			asyncSpecWait()
+			

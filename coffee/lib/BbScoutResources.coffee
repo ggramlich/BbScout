@@ -49,7 +49,16 @@ class PlayersResource
 	show: (request, response) ->
 		response.send renderer.renderPlayer request.player
 
+class EventsResource
+	create: (request, response) =>
+		player = request.player
+		return unless player?
+		
+		event = request.body
+		player[event.action]? event.argument
+		response.redirect "#{renderer.playerUri(player)}", 201
 
 exports.games = new GamesResource
 exports.teams = new TeamsResource
 exports.players = new PlayersResource
+exports.events = new EventsResource
