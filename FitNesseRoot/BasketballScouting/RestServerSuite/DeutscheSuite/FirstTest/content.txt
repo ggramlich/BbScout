@@ -1,0 +1,17 @@
+!|scenario|Mannschaft|Trikot|        |Vorname||Nachname|
+|do       |@Trikot   |with  |@Vorname|and    |@Nachname|
+
+
+!|scenario|Erzeuge Mannschaft|Mannschaftsname|
+|do       |@Mannschaftsname|
+
+
+![ script
+Erzeuge Mannschaft XYZ
+]!
+
+
+|Mannschaft|XYZ|
+|Trikot    |Nachname|Vorname           |
+|0         |Marion  |Shawn             |
+|41        |Nowitzki|Dirk              |
