@@ -1,9 +1,10 @@
-Definiere die Mannschaftsaufstellung von XYZ.
-
-|Mannschaft|XYZ             |
-|Trikot    |Nachname|Vorname|
-|0         |Marion  |Shawn  |
-|41        |Nowitzki|Dirk   |
+![ script
+Definiere die Mannschaftsaufstellung von XYZ
+]!
+|Mannschaftsliste       |
+|Trikot|Nachname|Vorname|
+|0     |Marion  |Shawn  |
+|41    |Nowitzki|Dirk   |
 
 Die Spieler sind jetzt mit ihren Trikotnummern zugeordnet und wir können ihre Namen verifizieren.
 Spieler, deren Trikotnummern oder Mannschaft nicht bekannt ist, werden als "unbekannt" bezeichnet.

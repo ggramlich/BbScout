@@ -1,5 +1,14 @@
 Spieler in Mannschaft
 
+!|scenario|Definiere die Mannschaftsaufstellung von _|Mannschaftsname |
+|start    |Mannschaft                                |@Mannschaftsname|
+
+!|scenario   |Mannschaftsliste|Trikot||Nachname||Vorname|
+|set trikot  |@Trikot                                   |
+|set nachname|@Nachname                                 |
+|set vorname |@Vorname                                  |
+|execute                                                |
+
 !|scenario|Spieler Nummer _ von _ ist _|Trikot, Mannschaftsname, Spielername|
 |start    |Wähle Spieler               |@Mannschaftsname      |@Trikot      |
 |check    |Spielername                 |@Spielername                        |
