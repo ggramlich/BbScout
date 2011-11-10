@@ -1,4 +1,7 @@
-|Team  |A                   |
+![ script
+Define the team roster of A
+]!
+|Team roster                |
 |number|first name|last name|
 |99    |Ninety    |Nine     |
 |98    |Ninety    |Eight    |
@@ -7,8 +10,10 @@
 |95    |Ninety    |Five     |
 |94    |Ninety    |Four     |
 
-
-|Team  |B                   |
+![ script
+Define the team roster of B
+]!
+|Team roster                |
 |number|first name|last name|
 |21    |Twenty    |One      |
 |22    |Twenty    |Two      |

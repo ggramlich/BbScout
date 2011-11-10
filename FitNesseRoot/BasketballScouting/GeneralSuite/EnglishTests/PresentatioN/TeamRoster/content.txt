@@ -1,6 +1,7 @@
-Define a team roster for Dallas
-
-|Team  |Dallas              |
+![ script
+Define the team roster of Dallas
+]!
+|Team roster                |
 |number|last name|first name|
 |0     |Marion   |Shawn     |
 |41    |Nowitzki |Dirk      |

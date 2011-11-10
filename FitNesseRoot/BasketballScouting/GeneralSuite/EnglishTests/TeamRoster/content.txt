@@ -1,9 +1,10 @@
-Define the team roster of XYZ.
-
-|Team|XYZ             |
-|number    |last name|first name|
-|0         |Marion  |Shawn  |
-|41        |Nowitzki|Dirk   |
+![ script
+Define the team roster of XYZ
+]!
+|Team roster                |
+|number|last name|first name|
+|0     |Marion   |Shawn     |
+|41    |Nowitzki |Dirk      |
 
 The players are now assigned to their shirt numbers and we can verify their names.
 If a shirt number or team is not defined, the player is name "unknown".

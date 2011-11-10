@@ -1,8 +1,18 @@
 Player in Team
 
+!|scenario|Define the team roster of _|teamname |
+|start    |team                       |@teamname|
+
+!|scenario    |team roster|number||lastName||firstName|
+|set number   |@number                                |
+|set lastName |@lastName                              |
+|set firstName|@firstName                             |
+|execute                                              |
+
 !|scenario|Player number _ of _ is _|number, teamname, playername|
 |start    |select player            |@teamname      |@number     |
 |check    |playerName               |@playername                 |
+
 
 ----
 Players und Points
