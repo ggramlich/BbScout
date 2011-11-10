@@ -1,0 +1,3 @@
+!|scenario|Manschaft _ _ _|Trikot, Vorname, Nachname|
+|do|@Trikot|
+

@@ -1,0 +1,7 @@
+!|import                        |
+|smartrics.rest.fitnesse.fixture|
+
+Just start the !-RestScriptFixture-!, so that it is the default script table actor and can be used in the scenarios.
+
+!|script                            |
+|start|RestScriptFixture|${BASE_URL}|
