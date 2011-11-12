@@ -3,10 +3,6 @@
 class Renderer
 	teamIsInGame = (team) -> team.game?
 
-	renderGames: (games) => @render @listGames games
-
-	renderGame: (game) => @render @gameRepresentation game
-
 	listGames: (games) =>
 		for key, game of games
 			@gameRepresentation game
@@ -22,11 +18,6 @@ class Renderer
 		score: game.score()
 
 	gameUri: (game) -> "/games/#{game.id}"
-
-	renderTeams: (teams) => @render @listTeams teams
-
-	renderTeam: (team) =>
-		@render @teamRepresentation team
 
 	listTeams: (teams) =>
 		for name, team of teams
@@ -48,9 +39,6 @@ class Renderer
 			"#{@gameUri team.game}/teams/#{team.idInGame}"
 		else
 			escape "/all_teams/#{team.name}"
-
-	renderPlayer: (player) =>
-		@render @playerRepresentation player
 
 	listPlayers: (team) =>
 		for number, player of team.playersList

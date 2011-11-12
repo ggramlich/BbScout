@@ -3,6 +3,10 @@
 
 allTeamsList = model.teams
 
+jsonResponse = (response, object) ->
+	response.contentType('json')
+	response.send renderer.render object
+
 class GamesResource
 	# TODO make gamesList smarter (not simply an array)
 	gamesList = model.store.games
@@ -19,7 +23,7 @@ class GamesResource
 	getGame: (id) -> gamesList[id - 1]
 
 	index: (request, response) ->
-		response.send renderer.renderGames gamesList
+		jsonResponse response, renderer.listGames gamesList
 		
 	create: (request, response) =>
 		game = parser.createGame request.body, allTeamsList
@@ -27,7 +31,7 @@ class GamesResource
 		response.redirect renderer.gameUri(game), 201
 
 	show: (request, response) ->
-		response.send renderer.renderGame request.game
+		jsonResponse response, renderer.gameRepresentation request.game
 
 class TeamsResource
 
@@ -36,11 +40,11 @@ class TeamsResource
 		fn(null, team)
 
 	show: (request, response) ->
-		response.send renderer.renderTeam request.team
+		jsonResponse response, renderer.teamRepresentation request.team
 
 class AllTeamsResource
 	index: (request, response) ->
-		response.send renderer.renderTeams allTeamsList
+		jsonResponse response, renderer.listTeams allTeamsList
 		
 	addTeam: (team) ->
 		allTeamsList[team.name] = team
@@ -50,7 +54,7 @@ class AllTeamsResource
 		fn(null, team)
 
 	show: (request, response) ->
-		response.send renderer.renderTeam request.all_team
+		jsonResponse response, renderer.teamRepresentation request.all_team
 
 	create: (request, response) =>
 		teamRepresentation = request.body
@@ -64,7 +68,7 @@ class AllTeamsPlayersResource
 		fn(null, player)
 
 	show: (request, response) ->
-		response.send renderer.renderPlayer request.all_player
+		jsonResponse response, renderer.playerRepresentation request.all_player
 
 	create: (request, response) =>
 		player = parser.createPlayer request.body, request.all_team
@@ -81,7 +85,7 @@ class PlayersResource
 		fn(null, player)
 
 	show: (request, response) ->
-		response.send renderer.renderPlayer request.player
+		jsonResponse response, renderer.playerRepresentation request.player
 
 class EventsResource
 	create: (request, response) =>

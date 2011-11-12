@@ -23,6 +23,8 @@ describe 'The Rest server', ->
 	beforeEach ->
 		restServer.resetGames()
 		restServer.start port
+		@addMatchers
+			toBeJson: -> @actual.headers['content-type'] == 'application/json'
 
 	afterEach ->
 		restServer.stop()
@@ -31,6 +33,7 @@ describe 'The Rest server', ->
 		it 'exists', ->
 			request uri: games_uri, (req, resp) ->
 				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
 				asyncSpecDone()
 			asyncSpecWait()
 	
@@ -90,6 +93,7 @@ describe 'The Rest server', ->
 		it 'exists', ->
 			request uri: game1_uri, (req, resp) ->
 				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
 				asyncSpecDone()
 			asyncSpecWait()
 	
@@ -116,6 +120,7 @@ describe 'The Rest server', ->
 		it 'exists', ->
 			request uri: all_teams_uri, (req, resp) ->
 				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
 				asyncSpecDone()
 			asyncSpecWait()
 
@@ -148,6 +153,7 @@ describe 'The Rest server', ->
 		it 'exists', ->
 			request uri: teamX_uri, (req, resp) ->
 				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
 				asyncSpecDone()
 			asyncSpecWait()
 
@@ -176,6 +182,7 @@ describe 'The Rest server', ->
 			playerUri = "#{teamX_uri}/all_players/41"
 			request uri: playerUri, (req, resp) ->
 				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
 				asyncSpecDone()
 			asyncSpecWait()
 
@@ -209,6 +216,7 @@ describe 'The Rest server', ->
 		it 'exists', ->
 			request uri: game1_teamA_uri, (req, resp) ->
 				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
 				asyncSpecDone()
 			asyncSpecWait()
 	
@@ -247,6 +255,7 @@ describe 'The Rest server', ->
 			playerUri = "#{game1_teamA_uri}/players/41"
 			request uri: playerUri, (req, resp) ->
 				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
 				asyncSpecDone()
 			asyncSpecWait()
 
