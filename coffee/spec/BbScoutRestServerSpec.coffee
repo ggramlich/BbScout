@@ -127,6 +127,18 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 
+		it 'allows to add a team', ->
+			team = name: 'New team'
+			new_team_uri = "#{all_teams_uri}New%20team"	
+			options = uri: all_teams_uri, method: 'POST', json: team
+			request options, (req, resp) ->
+				expect(resp.statusCode).toEqual 201
+				expect(resp.headers.location).toEqual new_team_uri
+				request uri: new_team_uri, (req, resp) ->
+					expect(resp.statusCode).toEqual 200
+				asyncSpecDone()
+			asyncSpecWait()
+
 	describe 'a single team resource from all teams', ->
 		teamX = null
 		teamX_uri = "#{all_teams_uri}Team%20X"

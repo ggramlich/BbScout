@@ -76,9 +76,11 @@ class Renderer
 # because we use express.bodyParser()
 class Parser
 	createGame: (teamNames, existingTeams = {}) =>
-		teamA = existingTeams[teamNames.teamA] ? new model.Team teamNames.teamA
-		teamB = existingTeams[teamNames.teamB] ? new model.Team teamNames.teamB
+		teamA = existingTeams[teamNames.teamA] ? @createTeam teamNames.teamA
+		teamB = existingTeams[teamNames.teamB] ? @createTeam teamNames.teamB
 		new model.Game teamA, teamB
+
+	createTeam: (teamName) -> new model.Team teamName
 
 	createPlayer: (representation, team) =>
 		player = new model.Player representation.number, representation.firstName, representation.lastName, representation.points

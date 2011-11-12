@@ -52,6 +52,12 @@ class AllTeamsResource
 	show: (request, response) ->
 		response.send renderer.renderTeam request.all_team
 
+	create: (request, response) =>
+		teamRepresentation = request.body
+		team = parser.createTeam teamRepresentation.name
+		@addTeam team
+		response.redirect renderer.teamUri(team), 201
+
 class AllTeamsPlayersResource
 	load: (request, id, fn) ->
 		player = request.all_team?.getPlayer id
