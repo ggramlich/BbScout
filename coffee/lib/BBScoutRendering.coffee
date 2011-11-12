@@ -3,28 +3,12 @@
 class Renderer
 	teamIsInGame = (team) -> team.game?
 
-	gameUri: (game) -> "/games/#{game.id}"
-
-	teamUri: (team) =>
-		if teamIsInGame team
-			"#{@gameUri team.game}/teams/#{team.idInGame}"
-		else
-			escape "/all_teams/#{team.name}"
-
-	playerUri: (player) =>
-		if teamIsInGame player.team
-			"#{@teamUri player.team}/players/#{player.number}"
-		else
-			"#{@teamUri player.team}/all_players/#{player.number}"
+	renderGames: (games) => @render @listGames games
 
 	renderGame: (game) => @render @gameRepresentation game
 
-	listTeams: (teams) =>
-		for name, team of teams
-			@teamRepresentation team
-
-	listGames: (gamesList) =>
-		for key, game of gamesList
+	listGames: (games) =>
+		for key, game of games
 			@gameRepresentation game
 
 	gameRepresentation: (game) =>
@@ -37,8 +21,16 @@ class Renderer
 			uri: @teamUri game.teamB
 		score: game.score()
 
+	gameUri: (game) -> "/games/#{game.id}"
+
+	renderTeams: (teams) => @render @listTeams teams
+
 	renderTeam: (team) =>
 		@render @teamRepresentation team
+
+	listTeams: (teams) =>
+		for name, team of teams
+			@teamRepresentation team
 
 	teamRepresentation: (team) =>
 		reresentation =
@@ -51,13 +43,19 @@ class Renderer
 				uri: @gameUri team.game
 		reresentation
 
+	teamUri: (team) =>
+		if teamIsInGame team
+			"#{@gameUri team.game}/teams/#{team.idInGame}"
+		else
+			escape "/all_teams/#{team.name}"
+
+	renderPlayer: (player) =>
+		@render @playerRepresentation player
+
 	listPlayers: (team) =>
 		for number, player of team.playersList
 			player.team = team
 			@playerRepresentation player
-
-	renderPlayer: (player) =>
-		@render @playerRepresentation player
 
 	playerRepresentation: (player) =>
 		uri: @playerUri player
@@ -65,6 +63,12 @@ class Renderer
 		firstName: player.firstName
 		lastName: player.lastName
 		points: player.points
+
+	playerUri: (player) =>
+		if teamIsInGame player.team
+			"#{@teamUri player.team}/players/#{player.number}"
+		else
+			"#{@teamUri player.team}/all_players/#{player.number}"
 
 	render: (object) => JSON.stringify object
 

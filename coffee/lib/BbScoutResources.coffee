@@ -19,7 +19,7 @@ class GamesResource
 	getGame: (id) -> gamesList[id - 1]
 
 	index: (request, response) ->
-		response.send JSON.stringify renderer.listGames gamesList
+		response.send renderer.renderGames gamesList
 		
 	create: (request, response) =>
 		game = parser.createGame request.body, allTeamsList
@@ -40,7 +40,7 @@ class TeamsResource
 
 class AllTeamsResource
 	index: (request, response) ->
-		response.send JSON.stringify renderer.listTeams allTeamsList
+		response.send renderer.renderTeams allTeamsList
 		
 	addTeam: (team) ->
 		allTeamsList[team.name] = team
