@@ -135,6 +135,41 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 
+	describe 'the player resource from an all_teams team', ->
+		teamX = null
+		teamX_uri = "#{all_teams_uri}Team%20X"
+		beforeEach ->
+			teamX = restServer.addTeam new model.Team 'Team X'
+
+		it 'exists', ->
+			teamX.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+			playerUri = "#{teamX_uri}/all_players/41"
+			request uri: playerUri, (req, resp) ->
+				expect(resp.statusCode).toEqual 200
+				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'shows a representation of the player', ->
+			player = teamX.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+			playerUri = "#{teamX_uri}/all_players/41"
+			request uri: playerUri, (req, resp) ->
+				result = JSON.parse resp.body
+				expect(result).toEqual renderer.playerRepresentation player
+				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'allows to add a player', ->
+			playersUri = "#{teamX_uri}/all_players"
+			player = number: 23, firstName: 'Michael', lastName: 'Jordan', points: 2
+				
+			options = uri: playersUri, method: 'POST', json: player
+			request options, (req, resp) ->
+				expect(resp.statusCode).toEqual 201
+				expect(resp.headers.location).toEqual "#{playersUri}/23"
+				expect(teamX.getPlayer(player.number).name()).toBe 'Michael Jordan'
+				asyncSpecDone()
+			asyncSpecWait()
+
 	describe 'a single team resource within a game', ->
 		game = null
 		beforeEach ->

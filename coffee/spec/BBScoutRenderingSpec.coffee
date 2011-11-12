@@ -66,3 +66,15 @@ describe 'the renderer', ->
 			firstName: 'Michael'
 			lastName: 'Jordan'
 			points: 0
+
+	it 'should represent a player that is in a team without a game', ->
+		player = new model.Player 23, 'Michael', 'Jordan'
+		teamX = new model.Team 'Team X'
+		teamX.addPlayer player
+		representation = renderer.playerRepresentation player
+		expect(representation).toEqual
+			uri: '/all_teams/Team%20X/all_players/23'
+			name: 'Michael Jordan'
+			firstName: 'Michael'
+			lastName: 'Jordan'
+			points: 0

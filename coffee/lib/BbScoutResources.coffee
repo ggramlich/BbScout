@@ -52,6 +52,18 @@ class AllTeamsResource
 	show: (request, response) ->
 		response.send renderer.renderTeam request.all_team
 
+class AllTeamsPlayersResource
+	load: (request, id, fn) ->
+		player = request.all_team?.getPlayer id
+		fn(null, player)
+
+	show: (request, response) ->
+		response.send renderer.renderPlayer request.all_player
+
+	create: (request, response) =>
+		player = parser.createPlayer request.body, request.all_team
+		response.redirect renderer.playerUri(player), 201
+
 class PlayersResource
 
 	create: (request, response) =>
@@ -76,6 +88,7 @@ class EventsResource
 
 exports.games = new GamesResource
 exports.allTeams = new AllTeamsResource
+exports.allTeamsPlayers = new AllTeamsPlayersResource
 exports.teams = new TeamsResource
 exports.players = new PlayersResource
 exports.events = new EventsResource

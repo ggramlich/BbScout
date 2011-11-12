@@ -1,15 +1,21 @@
 {model} = require('./BbScoutModel').BbScout
 
 class Renderer
-	gameUri: (game) => "/games/#{game.id}"
+	teamIsInGame = (team) -> team.game?
+
+	gameUri: (game) -> "/games/#{game.id}"
 
 	teamUri: (team) =>
-		if team.game?
+		if teamIsInGame team
 			"#{@gameUri team.game}/teams/#{team.idInGame}"
 		else
 			escape "/all_teams/#{team.name}"
 
-	playerUri: (player) => "#{@teamUri player.team}/players/#{player.number}"
+	playerUri: (player) =>
+		if teamIsInGame player.team
+			"#{@teamUri player.team}/players/#{player.number}"
+		else
+			"#{@teamUri player.team}/all_players/#{player.number}"
 
 	renderGame: (game) => @render @gameRepresentation game
 
