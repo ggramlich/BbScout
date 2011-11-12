@@ -21,7 +21,25 @@ describe 'the renderer', ->
 				uri: '/games/1/teams/teamB'
 			score: '0:0'
 
-	it 'should represent a team', ->
+	it 'should represent the list of teams', ->
+		teamX = new model.Team 'Team X'
+		teamY = new model.Team 'Team Y'
+		allTeams = 
+			'Team X': teamX
+			'Team Y': teamY
+		representation = renderer.listTeams allTeams
+		expect(representation).toEqual [(renderer.teamRepresentation teamX), (renderer.teamRepresentation teamY)]
+
+	it 'should represent a team that is not in a game', ->
+		teamX = new model.Team 'Team X'
+		representation = renderer.teamRepresentation teamX
+		expect(representation).toEqual
+			uri: '/teams/Team X'
+			name: 'Team X'
+			players: []
+			points: 0
+
+	it 'should represent a team that is in a game', ->
 		representation = renderer.teamRepresentation teamA
 		expect(representation).toEqual
 			uri: '/games/1/teams/teamA'

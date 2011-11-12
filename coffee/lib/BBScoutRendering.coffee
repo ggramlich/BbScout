@@ -2,10 +2,18 @@
 
 class Renderer
 	gameUri: (game) => "/games/#{game.id}"
-	teamUri: (team) => "#{@gameUri team.game}/teams/#{team.idInGame}"
+	teamUri: (team) =>
+		if team.game?
+			"#{@gameUri team.game}/teams/#{team.idInGame}"
+		else
+			"/teams/#{team.name}"
 	playerUri: (player) => "#{@teamUri player.team}/players/#{player.number}"
 
 	renderGame: (game) => @render @gameRepresentation game
+
+	listTeams: (teams) =>
+		for name, team of teams
+			@teamRepresentation team
 
 	listGames: (gamesList) =>
 		for key, game of gamesList
@@ -25,12 +33,15 @@ class Renderer
 		@render @teamRepresentation team
 
 	teamRepresentation: (team) =>
-		uri: @teamUri team
-		game:
-			uri: @gameUri team.game
-		name: team.name
-		players: @listPlayers team
-		points: team.points()
+		reresentation =
+			uri: @teamUri team
+			name: team.name
+			players: @listPlayers team
+			points: team.points()
+		if team.game?
+			reresentation.game =
+				uri: @gameUri team.game
+		reresentation
 
 	listPlayers: (team) =>
 		for number, player of team.playersList

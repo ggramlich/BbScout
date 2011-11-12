@@ -11,6 +11,8 @@ games_uri = "#{base_uri}/games/"
 game1_uri = "#{games_uri}1"
 game1_teamA_uri = "#{game1_uri}/teams/teamA"
 
+all_teams_uri = "#{base_uri}/all_teams/"
+
 createDefaultGame = ->
 	teamA = new model.Team 'Team A'
 	teamB = new model.Team 'Team B'
@@ -87,7 +89,27 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 
-	describe 'a single team resource', ->
+	describe 'the all teams resource', ->
+		teamX = teamY = null
+		beforeEach ->
+			teamX = restServer.addTeam new model.Team 'Team X'
+			teamY = restServer.addTeam new model.Team 'Team Y'
+			
+		it 'exists', ->
+			request uri: all_teams_uri, (req, resp) ->
+				expect(resp.statusCode).toEqual 200
+				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'shows a list of the teams', ->
+			expected = [renderer.teamRepresentation(teamX), renderer.teamRepresentation(teamY)]
+			request uri: all_teams_uri, (req, resp) ->
+				result = JSON.parse resp.body
+				expect(result).toEqual expected
+				asyncSpecDone()
+			asyncSpecWait()
+
+	describe 'a single team resource within a game', ->
 		game = null
 		beforeEach ->
 			game = createDefaultGame()

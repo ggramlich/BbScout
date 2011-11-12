@@ -36,6 +36,15 @@ class TeamsResource
 	show: (request, response) ->
 		response.send renderer.renderTeam request.team
 
+class AllTeamsResource
+	allTeamsList = model.teams
+
+	index: (request, response) ->
+		response.send JSON.stringify renderer.listTeams allTeamsList
+		
+	addTeam: (team) ->
+		allTeamsList[team.name] = team
+
 class PlayersResource
 
 	create: (request, response) =>
@@ -59,6 +68,7 @@ class EventsResource
 		response.redirect "#{renderer.playerUri(player)}", 201
 
 exports.games = new GamesResource
+exports.allTeams = new AllTeamsResource
 exports.teams = new TeamsResource
 exports.players = new PlayersResource
 exports.events = new EventsResource
