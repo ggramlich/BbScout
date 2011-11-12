@@ -1,6 +1,8 @@
 {model} = require('./BbScoutModel').BbScout
 {renderer, parser} = require('./BBScoutRendering')
 
+allTeamsList = model.teams
+
 class GamesResource
 	# TODO make gamesList smarter (not simply an array)
 	gamesList = model.store.games
@@ -20,7 +22,7 @@ class GamesResource
 		response.send JSON.stringify renderer.listGames gamesList
 		
 	create: (request, response) =>
-		game = parser.createGame request.body
+		game = parser.createGame request.body, allTeamsList
 		@addGame game
 		response.redirect renderer.gameUri(game), 201
 
@@ -37,8 +39,6 @@ class TeamsResource
 		response.send renderer.renderTeam request.team
 
 class AllTeamsResource
-	allTeamsList = model.teams
-
 	index: (request, response) ->
 		response.send JSON.stringify renderer.listTeams allTeamsList
 		

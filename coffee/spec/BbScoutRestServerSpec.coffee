@@ -64,6 +64,24 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 
+		it 'allows the creation of a new game with teams from the all_teams resource', ->
+			expect(restServer.getGame 1).toBeUndefined()
+			teamX = restServer.addTeam new model.Team 'Team X'
+			teamY = restServer.addTeam new model.Team 'Team Y'
+			teamX.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
+			teamY.addPlayer new model.Player(23, 'Michael', 'Jordan')
+
+			teamNames = {teamA: 'Team X', teamB: 'Team Y'}
+			options = uri: games_uri, method: 'POST', json: teamNames
+			request options, (req, resp) ->
+				expect(resp.statusCode).toEqual 201
+				expect(resp.headers.location).toEqual game1_uri
+				actualGame = restServer.getGame 1
+				expect(actualGame.teamA).toEqual teamX
+				expect(actualGame.teamB).toEqual teamY
+				asyncSpecDone()
+			asyncSpecWait()
+
 	describe 'A single game resource', ->
 		game1 = null
 		beforeEach ->

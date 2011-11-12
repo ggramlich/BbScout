@@ -71,9 +71,9 @@ class Renderer
 # The parser actually takes javascript object, not JSON strings,
 # because we use express.bodyParser()
 class Parser
-	createGame: (teamNames) =>
-		teamA = new model.Team teamNames.teamA
-		teamB = new model.Team teamNames.teamB
+	createGame: (teamNames, existingTeams = {}) =>
+		teamA = existingTeams[teamNames.teamA] ? new model.Team teamNames.teamA
+		teamB = existingTeams[teamNames.teamB] ? new model.Team teamNames.teamB
 		new model.Game teamA, teamB
 
 	createPlayer: (representation, team) =>
