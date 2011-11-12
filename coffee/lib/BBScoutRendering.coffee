@@ -2,11 +2,13 @@
 
 class Renderer
 	gameUri: (game) => "/games/#{game.id}"
+
 	teamUri: (team) =>
 		if team.game?
 			"#{@gameUri team.game}/teams/#{team.idInGame}"
 		else
-			"/teams/#{team.name}"
+			escape "/all_teams/#{team.name}"
+
 	playerUri: (player) => "#{@teamUri player.team}/players/#{player.number}"
 
 	renderGame: (game) => @render @gameRepresentation game

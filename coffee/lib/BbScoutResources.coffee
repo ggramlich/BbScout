@@ -45,6 +45,13 @@ class AllTeamsResource
 	addTeam: (team) ->
 		allTeamsList[team.name] = team
 
+	load: (request, name, fn) ->
+		team = allTeamsList[name]
+		fn(null, team)
+
+	show: (request, response) ->
+		response.send renderer.renderTeam request.all_team
+
 class PlayersResource
 
 	create: (request, response) =>

@@ -34,7 +34,7 @@ describe 'the renderer', ->
 		teamX = new model.Team 'Team X'
 		representation = renderer.teamRepresentation teamX
 		expect(representation).toEqual
-			uri: '/teams/Team X'
+			uri: '/all_teams/Team%20X'
 			name: 'Team X'
 			players: []
 			points: 0

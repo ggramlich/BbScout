@@ -109,6 +109,32 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 
+	describe 'a single team resource from all teams', ->
+		teamX = null
+		teamX_uri = "#{all_teams_uri}Team%20X"
+		beforeEach ->
+			teamX = restServer.addTeam new model.Team 'Team X'
+
+		it 'exists', ->
+			request uri: teamX_uri, (req, resp) ->
+				expect(resp.statusCode).toEqual 200
+				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'shows a representation of the team', ->
+			expected = renderer.teamRepresentation teamX
+			request uri: teamX_uri, (req, resp) ->
+				result = JSON.parse resp.body
+				expect(result).toEqual expected
+				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'can handle a wrong name', ->
+			request uri: "#{all_teams_uri}abc", (req, resp) ->
+				expect(resp.statusCode).toEqual 404
+				asyncSpecDone()
+			asyncSpecWait()
+
 	describe 'a single team resource within a game', ->
 		game = null
 		beforeEach ->

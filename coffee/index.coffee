@@ -14,4 +14,8 @@ server.addGame game
 teamA.addPlayer new model.Player(41, 'Dirk', 'Nowitzki')
 teamA.addPlayer new model.Player(99, 'XYZ', '99')
 
+teamX = new model.Team 'Team X'
+teamX.addPlayer new model.Player(5, 'Johannes', 'Herber')
+server.addTeam teamX
+
 console.log "added a game"
