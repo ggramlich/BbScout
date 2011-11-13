@@ -6,6 +6,19 @@ express = require 'express'
 app = express.createServer()
 app.use express.bodyParser()
 
+# Setup Template Engine
+app.register '.coffee', require('coffeekup')
+app.set 'view engine', 'coffee'
+
+# Setup Static Files
+app.use express.static('public')
+
+# App Routes
+app.get '/', (request, response) ->
+	response.render 'index'
+
+app.use require('connect-assets')()
+
 gamesResource = app.resource 'games', games, {load: games.load}
 teamsResource = app.resource 'teams', teams, {load: teams.load}
 playersResource = app.resource 'players', players, {load: players.load}
