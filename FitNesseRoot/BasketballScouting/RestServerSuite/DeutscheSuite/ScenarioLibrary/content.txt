@@ -53,8 +53,20 @@ Spieler und Punkte
 ----
 Treffer und Fehlwürfe
 
-!|scenario|dann hat er _ von _ _ getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
-|ensure   |echo                           |false                                  |
+!|scenario|dann hat er _ von _ Freiwürfen getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
+|Player has scored @TrefferZahl of @WurfZahl Freethrow                                     |
+
+!|scenario|dann hat er _ von _ Feldkörben getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
+|Player has scored @TrefferZahl of @WurfZahl Fieldgoal                                     |
+
+!|scenario|dann hat er _ von _ Dreier getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
+|Player has scored @TrefferZahl of @WurfZahl Threepointer                              |
+
+!|scenario |Player has scored _ of _ _|scored, attempted, PointType                                                                         |
+|get       |$playerUri                                                                                                                      |
+|has header|Content-Type : application/json                                                                                                 |
+|check     |js                        |var player = eval('(' + response.body + ')'); "" + player.stats["@PointType"]["scored"]   |@scored   |
+|check     |js                        |var player = eval('(' + response.body + ')'); "" + player.stats["@PointType"]["attempted"]|@attempted|
 
 !|scenario|wenn er einen Freiwurf verfehlt|
 |Player misses Freethrow                  |
