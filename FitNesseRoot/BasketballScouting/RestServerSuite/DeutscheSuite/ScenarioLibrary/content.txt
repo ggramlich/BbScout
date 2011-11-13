@@ -39,8 +39,8 @@ Spieler und Punkte
 !|scenario|wenn er einen Dreier trifft|
 |Player scores Threepointer           |
 
-!|scenario|Player scores _                               |PointType           |
-|create   |{"action": "scores", "argument": "@PointType"}|on|$playerUri/events|
+!|scenario|Player _ _                                     |action, PointType   |
+|create   |{"action": "@action", "argument": "@PointType"}|on|$playerUri/events|
 
 !|scenario |dann hat er _ Punkte|Punkte                                                                  |
 |get       |$playerUri                                                                                   |
@@ -51,6 +51,19 @@ Spieler und Punkte
 |dann hat er @Punkte Punkte          |
 
 ----
+Treffer und Fehlwürfe
+
+!|scenario|dann hat er _ von _ _ getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
+|ensure   |echo                           |false                                  |
+
+!|scenario|wenn er einen Freiwurf verfehlt|
+|Player misses Freethrow                  |
+
+!|scenario|wenn er einen Feldkorb verfehlt|
+|Player misses Fieldgoal                  |
+
+!|scenario|wenn er einen Dreier verfehlt|
+|Player misses Threepointer             |
 
 ----
 Spielstand
