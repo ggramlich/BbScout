@@ -7,12 +7,71 @@ Spieler in Mannschaft
 |check     |status code                               |201                     |
 |$teamUri= |header                                    |Location:${BASE_URL}(.+)|
 
-!|scenario  |Mannschaftsliste      |Trikot        |       |Nachname       |      |Vorname      |
-|set body   |!- { "number" : "@Trikot", "lastName" : "@Nachname", "firstName" : "@Vorname" } -!|
-|post       |$teamUri/all_players                                                              |
-|check      |status code           |201                                                        |
+!|scenario|Mannschaftsliste       |Trikot       |       |Nachname       |      |Vorname      |
+|set body |!- { "number" : "@Trikot", "lastName" : "@Nachname", "firstName" : "@Vorname" } -!|
+|post     |$teamUri/all_players                                                              |
+|check    |status code            |201                                                       |
 
 !|scenario|Spieler Nummer _ von _ ist _|Trikot, Mannschaftsname, Spielername                                                                                             |
 |get      |/all_teams/@Mannschaftsname/all_players/@Trikot                                                                                                               |
 |check    |js                          |!-if (response.body == "Not Found") {"unbekannt"} else {var player = eval('(' + response.body + ')'); player.name}-!|@Spielername|
 
+----
+Spieler und Punkte
+
+!|scenario  |Gegeben ein Spieler mit _ Punkten                  |Punkte                                    |
+|set body   |!- {"teamA": "TeamA", "teamB": "TeamB"} -!                                                    |
+|set header |Content-type: application/json                                                                |
+|post       |/games/                                                                                       |
+|check      |status code                                        |201                                       |
+|$gameUri=  |header                                             |Location:${BASE_URL}(.+)                  |
+|set body   |!- { "number" : "1", "lastName" : "Nachname", "firstName" : "Vorname", "points" : @Punkte } -!|
+|set header |Content-type: application/json                                                                |
+|post       |$gameUri/teams/teamA/players                                                                  |
+|show       |response body                                                                                 |
+|check      |status code                                        |201                                       |
+|$playerUri=|header                                             |Location:${BASE_URL}(.+)                  |
+
+!|scenario|wenn er einen Freiwurf trifft|
+|Player scores Freethrow                |
+
+!|scenario|wenn er einen Feldkorb trifft|
+|Player scores Fieldgoal                |
+
+!|scenario|wenn er einen Dreier trifft|
+|Player scores Threepointer           |
+
+!|scenario|Player scores _              |PointType             |
+|set body |!- {"action": "scores", "argument": "@PointType"} -!|
+|post     |$playerUri/events                                   |
+|show     |response body                                       |
+|check    |status code                  |201                   |
+
+!|scenario |dann hat er _ Punkte|Punkte                                                                  |
+|get       |$playerUri                                                                                   |
+|has header|Content-Type : application/json                                                              |
+|check     |js                  |var player = eval('(' + response.body + ')'); "" + player.points|@Punkte|
+
+!|scenario|dann hat er _ Punkt|Punkte|
+|dann hat er @Punkte Punkte          |
+
+----
+
+----
+Spielstand
+
+!|scenario |Das Spiel zwischen _ und _ beginnt|MannschaftA, MannschaftB|
+|set body  |!- {"teamA": "@MannschaftA", "teamB": "@MannschaftB"} -!   |
+|set header|Content-type: application/json                             |
+|post      |/games/                                                    |
+|check     |status code                       |201                     |
+|$gameUri= |header                            |Location:${BASE_URL}(.+)|
+
+!|scenario |Es steht _|Spielstand                                                        |
+|get       |$gameUri                                                                     |
+|has header|Content-Type : application/json                                              |
+|check     |js        |var game = eval('(' + response.body + ')'); game.score|@Spielstand|
+
+!|scenario  |Spieler _ _ trifft einen _|Mannschaft, Trikot, TrefferArt            |
+|$playerUri=|echo                      |$gameUri/teams/@Mannschaft/players/@Trikot|
+|wenn er einen @TrefferArt trifft                                                 |
