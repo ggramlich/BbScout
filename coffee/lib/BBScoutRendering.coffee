@@ -47,6 +47,7 @@ class Renderer
 
 	playerRepresentation: (player) =>
 		uri: @playerUri player
+		number: player.number
 		name: player.name()
 		firstName: player.firstName
 		lastName: player.lastName

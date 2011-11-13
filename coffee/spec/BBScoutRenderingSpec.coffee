@@ -62,6 +62,7 @@ describe 'the renderer', ->
 		representation = renderer.playerRepresentation player
 		expect(representation).toEqual
 			uri: '/games/1/teams/teamA/players/23'
+			number: 23
 			name: 'Michael Jordan'
 			firstName: 'Michael'
 			lastName: 'Jordan'
@@ -78,6 +79,7 @@ describe 'the renderer', ->
 		representation = renderer.playerRepresentation player
 		expect(representation).toEqual
 			uri: '/all_teams/Team%20X/all_players/23'
+			number: 23
 			name: 'Michael Jordan'
 			firstName: 'Michael'
 			lastName: 'Jordan'
