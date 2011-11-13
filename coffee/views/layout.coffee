@@ -34,6 +34,17 @@ html ->
 					li '.team', ->
 						a ->
 
+			div '#team', ->
+				p '.name', ->
+				p '.points', ->
+				a '.add_player', -> 'add player'
+				ul '.players', ->
+					li '.player', ->
+						a ->
+							span '.number', ->
+							text ' '
+							span '.name', ->
+				
 			div '#games', ->
 				ul '.games', ->
 					li '.game', ->
