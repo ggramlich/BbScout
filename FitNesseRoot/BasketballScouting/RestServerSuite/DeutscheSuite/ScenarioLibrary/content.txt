@@ -1,16 +1,23 @@
+Create resource
+
+!|scenario |create      |json|on|createUri|
+|set body  |@json                         |
+|set header|Content-type: application/json|
+|post      |@createUri                    |
+|check     |status code |201              |
+
+!|scenario   |create|json|on|createUri|into|resultUri|
+|create      |@json |on  |@createUri                 |
+|$@resultUri=|header|Location:${BASE_URL}(.+)        |
+
+-----
 Spieler in Mannschaft
 
-!|scenario |Definiere die Mannschaftsaufstellung von _|Mannschaftsname         |
-|set body  |!- { "name" : "@Mannschaftsname" } -!                              |
-|set header|Content-type: application/json                                     |
-|post      |/all_teams/                                                        |
-|check     |status code                               |201                     |
-|$teamUri= |header                                    |Location:${BASE_URL}(.+)|
+!|scenario|Definiere die Mannschaftsaufstellung von _|Mannschaftsname            |
+|create   |{ "name" : "@Mannschaftsname" }           |on|/all_teams/|into|teamUri|
 
-!|scenario|Mannschaftsliste       |Trikot       |       |Nachname       |      |Vorname      |
-|set body |!- { "number" : "@Trikot", "lastName" : "@Nachname", "firstName" : "@Vorname" } -!|
-|post     |$teamUri/all_players                                                              |
-|check    |status code            |201                                                       |
+!|scenario|Mannschaftsliste                                                            |Trikot| |Nachname ||Vorname|
+|create   |{ "number" : "@Trikot", "lastName" : "@Nachname", "firstName" : "@Vorname" }|on    |$teamUri/all_players|
 
 !|scenario|Spieler Nummer _ von _ ist _|Trikot, Mannschaftsname, Spielername                                                                                             |
 |get      |/all_teams/@Mannschaftsname/all_players/@Trikot                                                                                                               |
@@ -19,18 +26,9 @@ Spieler in Mannschaft
 ----
 Spieler und Punkte
 
-!|scenario  |Gegeben ein Spieler mit _ Punkten                  |Punkte                                    |
-|set body   |!- {"teamA": "TeamA", "teamB": "TeamB"} -!                                                    |
-|set header |Content-type: application/json                                                                |
-|post       |/games/                                                                                       |
-|check      |status code                                        |201                                       |
-|$gameUri=  |header                                             |Location:${BASE_URL}(.+)                  |
-|set body   |!- { "number" : "1", "lastName" : "Nachname", "firstName" : "Vorname", "points" : @Punkte } -!|
-|set header |Content-type: application/json                                                                |
-|post       |$gameUri/teams/teamA/players                                                                  |
-|show       |response body                                                                                 |
-|check      |status code                                        |201                                       |
-|$playerUri=|header                                             |Location:${BASE_URL}(.+)                  |
+!|scenario|Gegeben ein Spieler mit _ Punkten                                                       |Punkte                                        |
+|create   |{"teamA": "TeamA", "teamB": "TeamB"}                                                    |on|/games/                     |into|gameUri  |
+|create   |{ "number" : "1", "lastName" : "Nachname", "firstName" : "Vorname", "points" : @Punkte }|on|$gameUri/teams/teamA/players|into|playerUri|
 
 !|scenario|wenn er einen Freiwurf trifft|
 |Player scores Freethrow                |
@@ -41,11 +39,8 @@ Spieler und Punkte
 !|scenario|wenn er einen Dreier trifft|
 |Player scores Threepointer           |
 
-!|scenario|Player scores _              |PointType             |
-|set body |!- {"action": "scores", "argument": "@PointType"} -!|
-|post     |$playerUri/events                                   |
-|show     |response body                                       |
-|check    |status code                  |201                   |
+!|scenario|Player scores _                               |PointType           |
+|create   |{"action": "scores", "argument": "@PointType"}|on|$playerUri/events|
 
 !|scenario |dann hat er _ Punkte|Punkte                                                                  |
 |get       |$playerUri                                                                                   |
@@ -60,18 +55,14 @@ Spieler und Punkte
 ----
 Spielstand
 
-!|scenario |Das Spiel zwischen _ und _ beginnt|MannschaftA, MannschaftB|
-|set body  |!- {"teamA": "@MannschaftA", "teamB": "@MannschaftB"} -!   |
-|set header|Content-type: application/json                             |
-|post      |/games/                                                    |
-|check     |status code                       |201                     |
-|$gameUri= |header                            |Location:${BASE_URL}(.+)|
+!|scenario|Das Spiel zwischen _ und _ beginnt                |MannschaftA, MannschaftB|
+|create   |{"teamA": "@MannschaftA", "teamB": "@MannschaftB"}|on |/games/|into|gameUri|
+
+!|scenario  |Spieler _ _ trifft einen _|Mannschaft, Trikot, TrefferArt            |
+|$playerUri=|echo                      |$gameUri/teams/@Mannschaft/players/@Trikot|
+|wenn er einen @TrefferArt trifft                                                 |
 
 !|scenario |Es steht _|Spielstand                                                        |
 |get       |$gameUri                                                                     |
 |has header|Content-Type : application/json                                              |
 |check     |js        |var game = eval('(' + response.body + ')'); game.score|@Spielstand|
-
-!|scenario  |Spieler _ _ trifft einen _|Mannschaft, Trikot, TrefferArt            |
-|$playerUri=|echo                      |$gameUri/teams/@Mannschaft/players/@Trikot|
-|wenn er einen @TrefferArt trifft                                                 |
