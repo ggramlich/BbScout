@@ -1,21 +1,18 @@
 Spieler in Mannschaft
 
-!|scenario |Definiere die Mannschaftsaufstellung von _|Mannschaftsname                |
-|set body  |!- { "teamA" : "@Mannschaftsname", "teamB" : "B" } -!                     |
-|set header|Content-type: application/json                                            |
-|post      |/games/                                                                   |
-|check     |status code                               |201                            |
-|show      |response body                                                             |
-|show      |headers                                                                   |
-|$gameId=  |header                                    |Location:${BASE_URL}games/(.+)|
+!|scenario |Definiere die Mannschaftsaufstellung von _|Mannschaftsname         |
+|set body  |!- { "name" : "@Mannschaftsname" } -!                              |
+|set header|Content-type: application/json                                     |
+|post      |/all_teams/                                                        |
+|check     |status code                               |201                     |
+|$teamUri= |header                                    |Location:${BASE_URL}(.+)|
 
-!|scenario   |Mannschaftsliste|Trikot||Nachname||Vorname|
-|set body  |!- { "teamA" : "@Mannschaftsname", "teamB" : "B" } -!                     |
-|post      |/games/$gameId                                                                   |
-|check     |status code                               |201                            |
-|show      |response body                                                             |
-|show      |headers                                                                   |
-|$gameId=  |header                                    |Location:${BASE_URL}games/(.+)|
+!|scenario  |Mannschaftsliste      |Trikot        |       |Nachname       |      |Vorname      |
+|set body   |!- { "number" : "@Trikot", "lastName" : "@Nachname", "firstName" : "@Vorname" } -!|
+|post       |$teamUri/all_players                                                              |
+|check      |status code           |201                                                        |
 
-
+!|scenario|Spieler Nummer _ von _ ist _|Trikot, Mannschaftsname, Spielername                                                                                             |
+|get      |/all_teams/@Mannschaftsname/all_players/@Trikot                                                                                                               |
+|check    |js                          |!-if (response.body == "Not Found") {"unbekannt"} else {var player = eval('(' + response.body + ')'); player.name}-!|@Spielername|
 

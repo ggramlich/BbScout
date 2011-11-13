@@ -1,5 +1,5 @@
 !define TEST_SYSTEM {slim}
-!define BASE_URL {http://localhost:8000/}
+!define BASE_URL {http://localhost:8000}
 
 
 !path ${FITNESSE_ROOTPATH}/lib/*
