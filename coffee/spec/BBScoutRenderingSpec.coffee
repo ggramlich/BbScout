@@ -66,6 +66,10 @@ describe 'the renderer', ->
 			firstName: 'Michael'
 			lastName: 'Jordan'
 			points: 0
+			stats:
+				Freethrow: {scored: 0, attempted: 0}
+				Fieldgoal: {scored: 0, attempted: 0}
+				Threepointer: {scored: 0, attempted: 0}
 
 	it 'should represent a player that is in a team without a game', ->
 		player = new model.Player 23, 'Michael', 'Jordan'
@@ -78,3 +82,7 @@ describe 'the renderer', ->
 			firstName: 'Michael'
 			lastName: 'Jordan'
 			points: 0
+			stats:
+				Freethrow: {scored: 0, attempted: 0}
+				Fieldgoal: {scored: 0, attempted: 0}
+				Threepointer: {scored: 0, attempted: 0}

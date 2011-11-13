@@ -51,6 +51,7 @@ class Renderer
 		firstName: player.firstName
 		lastName: player.lastName
 		points: player.points
+		stats: player.stats
 
 	playerUri: (player) =>
 		if teamIsInGame player.team
