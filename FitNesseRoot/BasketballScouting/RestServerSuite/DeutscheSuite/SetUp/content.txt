@@ -1,6 +1,9 @@
 !|import                        |
 |smartrics.rest.fitnesse.fixture|
 
+!|library                     |
+|fitnesse.fixtures.EchoFixture|
+
 Just start the !-RestScriptFixture-!, so that it is the default script table actor and can be used in the scenarios.
 
 !|script                            |
