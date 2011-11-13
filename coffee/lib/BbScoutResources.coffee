@@ -37,6 +37,7 @@ class TeamsResource
 
 	load: (request, id, fn) ->
 		team = request.game?[id]
+		team ?= request.game?.getTeam id
 		fn(null, team)
 
 	show: (request, response) ->

@@ -220,6 +220,14 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 	
+		it 'exists for the team name', ->
+			team_uri = "#{game1_uri}/teams/Team%20A"
+			request uri: team_uri, (req, resp) ->
+				expect(resp.statusCode).toEqual 200
+				expect(resp).toBeJson()
+				asyncSpecDone()
+			asyncSpecWait()
+	
 		it 'can handle a bad id', ->
 			request uri: "#{game1_teamA_uri}BAD", (req, resp) ->
 				expect(resp.statusCode).toEqual 404
