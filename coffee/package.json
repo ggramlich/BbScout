@@ -1,9 +1,10 @@
 {
-    "name": "BbScout"
+		"name": "BbScout"
 	, "version": "0.0.1"
 	, "dependencies": {
-		"express": "2.4.7"
+			"express": "2.4.7"
 		, "express-resource": "0.2.3"
+		, "coffeekup": "0.3.1"
 	}
 	, "devDependencies": {
 		"jasmine-node": "1.0.12"
