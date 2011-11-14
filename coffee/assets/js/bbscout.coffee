@@ -10,15 +10,26 @@ $(document).ready ->
 		resetTemplates()
 		showGames()
 
-teamsTemplate = null
+templates = {}
 
 compileTemplates = ->
 	directive =
-		li:
+		'li':
 			'team<-teams':
 				'a': 'team.name'
 				'a@href': 'team.uri'
-	teamsTemplate = $('.teams').compile directive
+	templates['teams'] = $('.teams').compile directive
+
+	directive =
+		'.name': 'name'
+		'.points': 'points'
+		'a.add_player@href': 'uri'
+		'li':
+			'player<-players':
+				'span.number': 'player.number'
+				'span.name': 'player.name'
+				'a@href': 'player.uri'
+	templates['team'] = $('#team').compile directive
 
 resetTemplates = ->
 	$('#templates').append $('.template')
@@ -26,7 +37,7 @@ resetTemplates = ->
 showTeams = ->
 	loadTeams (teams) ->
 		data = teams: teams
-		$('#teams').html(teamsTemplate data)
+		$('#teams').html templates['teams'](data)
 		$('#teams').appendTo $('#left')
 		$('.teams').find('a').click (event) ->
 			event.preventDefault()
@@ -36,18 +47,9 @@ loadTeams = (fn) -> $.getJSON '/all_teams/', null, fn
 
 showTeam = (uri) ->
 	loadTeam uri, (team) ->
-		directive =
-			'.name': 'name'
-			'.points': 'points'
-			'a.add_player@href': 'uri'
-			'li':
-				'player<-players':
-					'span.number': 'player.number'
-					'span.name': 'player.name'
-					'a@href': 'player.uri'
 
 		console.log team.players[0]
-		$('#team').render team, directive
+		$('#team').html templates['team'](team)
 		$('#team').show().appendTo $('#middle')
 
 loadTeam = (uri, fn) -> $.getJSON uri, null, fn
