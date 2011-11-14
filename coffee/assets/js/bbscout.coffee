@@ -4,48 +4,48 @@ $(document).ready ->
 	compileTemplates()
 	$('#teamslink').click ->
 		resetTemplates()
-		showTeams()
+		showTeams($('#teamsContainer'))
 
 	$('#gameslink').click ->
 		resetTemplates()
-		showGames()
+		showGames($('#gamesContainer'))
 
 templates = {}
 
 resetTemplates = ->
 	$('#templates').append $('.template')
 
-showTeams = ->
+showTeams = ($container) ->
 	loadTeams (teams) ->
 		data = teams: teams
-		$('#teamsContainer').html templates['teams'](data)
-		$('#teamsContainer').appendTo $('#left')
-		$('#teams').find('a').click (event) ->
+		$container.html templates['teams'](data)
+		$container.appendTo $('#left')
+		$container.find('a').click (event) ->
 			event.preventDefault()
-			showTeam $(event.target).attr('href')
+			showTeam $(event.target).attr('href'), $('#teamContainer')
 
 loadTeams = (fn) -> $.getJSON '/all_teams/', null, fn
 
-showTeam = (uri) ->
+showTeam = (uri, $container) ->
 	loadTeam = (uri, fn) -> $.getJSON uri, null, fn
 
 	loadTeam uri, (team) ->
-		$('#teamContainer').html templates['team'](team)
-		$('#teamContainer').appendTo $('#middle')
-		$('#teamContainer').find('a').click (event) ->
+		$container.html templates['team'](team)
+		$container.appendTo $('#middle')
+		$container.find('a').click (event) ->
 			event.preventDefault()
 			showAddPlayerForm "#{uri}/all_players/"
 
 	showAddPlayerForm = (addplayeruri) ->
 		$('#addplayerContainer').html templates['addplayer']('uri': addplayeruri)
 		$('form.addplayer').ajaxForm 
-			success: (result) -> showTeam uri
+			success: (result) -> showTeam uri, $container
 	
-showGames = ->
+showGames = ($container) ->
 	loadGames (games) ->
 		data = games: games
-		$('#gamesContainer').html templates['games'](data)
-		$('#gamesContainer').appendTo $('#left')
+		$container.html templates['games'](data)
+		$container.appendTo $('#left')
 
 loadGames = (fn) -> $.getJSON '/games/', null, fn
 
