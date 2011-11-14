@@ -8,6 +8,7 @@ html ->
 		link rel: 'stylesheet', href: '/css/bbscout.css'
 
 		script src: '/js/jquery.js'
+		script src: '/js/jquery.form.js'
 		script src: '/js/pure.js'
 		js 'bbscout.js'
 
@@ -29,24 +30,26 @@ html ->
 		div '#right', ->
 
 		div '#templates', ->
-			div '#teams', ->
-				ul '.teams', ->
+			div '#teamsContainer', ->
+				ul '#teams', ->
 					li '.team', ->
 						a ->
 
-			div '#team', ->
-				p '.name', ->
-				p '.points', ->
-				a '.add_player', -> 'add player'
-				ul '.players', ->
-					li '.player', ->
-						a ->
-							span '.number', ->
-							text ' '
-							span '.name', ->
+			div '#teamContainer', ->
+				div '#team', ->
+					p '.name', ->
+					p '.points', ->
+					div '#addplayerContainer', ->
+						a '.add_player', -> 'add player'
+					ul '.players', ->
+						li '.player', ->
+							a ->
+								span '.number', ->
+								text ' '
+								span '.name', ->
 				
-			div '#games', ->
-				ul '.games', ->
+			div '#gamesContainer', ->
+				ul '#games', ->
 					li '.game', ->
 						a ->
 							span '.teamA', ->
@@ -55,3 +58,11 @@ html ->
 							text ' ('
 							span '.score', ->
 							text ')'
+
+			div '#addplayer', ->
+				form '.addplayer', action: '#', method: 'post', ->
+					input type: 'text', name: 'number', size: '2' 
+					input type: 'text', name: 'firstName', size: '15'
+					input type: 'text', name: 'lastName', size: '15'
+					input type: 'submit', value: 'add'
+

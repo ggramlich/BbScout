@@ -18,26 +18,34 @@ resetTemplates = ->
 showTeams = ->
 	loadTeams (teams) ->
 		data = teams: teams
-		$('#teams').html templates['teams'](data)
-		$('#teams').appendTo $('#left')
-		$('.teams').find('a').click (event) ->
+		$('#teamsContainer').html templates['teams'](data)
+		$('#teamsContainer').appendTo $('#left')
+		$('#teams').find('a').click (event) ->
 			event.preventDefault()
 			showTeam $(event.target).attr('href')
 
 loadTeams = (fn) -> $.getJSON '/all_teams/', null, fn
 
 showTeam = (uri) ->
+	loadTeam = (uri, fn) -> $.getJSON uri, null, fn
+
 	loadTeam uri, (team) ->
-		$('#team').html templates['team'](team)
-		$('#team').show().appendTo $('#middle')
+		$('#teamContainer').html templates['team'](team)
+		$('#teamContainer').appendTo $('#middle')
+		$('#teamContainer').find('a').click (event) ->
+			event.preventDefault()
+			showAddPlayerForm "#{uri}/all_players/"
 
-loadTeam = (uri, fn) -> $.getJSON uri, null, fn
-
+	showAddPlayerForm = (addplayeruri) ->
+		$('#addplayerContainer').html templates['addplayer']('uri': addplayeruri)
+		$('form.addplayer').ajaxForm 
+			success: (result) -> showTeam uri
+	
 showGames = ->
 	loadGames (games) ->
 		data = games: games
-		$('.games').html templates['games'](data)
-		$('#games').appendTo $('#left')
+		$('#gamesContainer').html templates['games'](data)
+		$('#gamesContainer').appendTo $('#left')
 
 loadGames = (fn) -> $.getJSON '/games/', null, fn
 
@@ -48,7 +56,7 @@ compileTemplates = ->
 			'team<-teams':
 				'a': 'team.name'
 				'a@href': 'team.uri'
-	templates['teams'] = $('.teams').compile directive
+	templates['teams'] = $('#teams').compile directive
 
 	directive =
 		'.name': 'name'
@@ -62,12 +70,16 @@ compileTemplates = ->
 	templates['team'] = $('#team').compile directive
 
 	directive =
-		li:
+		'li':
 			'game<-games':
 				'a@href': 'game.uri'
 				'span.teamA': 'game.teamA.name'
 				'span.teamB': 'game.teamB.name'
 				'span.score': 'game.score'
 
-	templates['games'] = $('.games').compile directive
+	templates['games'] = $('#games').compile directive
+
+	directive =
+		'form@action': 'uri'
+	templates['addplayer'] = $('#addplayer').compile directive
 
