@@ -57,18 +57,6 @@ showTeam = (uri, $container) ->
 		$('form.addplayer').ajaxForm 
 			success: (result) -> showTeam uri, $container
 
-showPlayer = (uri, $container) ->
-	loadPlayer uri, (player) ->
-		$container.html templates['player'](player)
-		$container.appendTo $RIGHT
-		$container.find('button').data('uri', "#{uri}/events")
-		$container.find('button').click (event) ->
-			event.preventDefault()
-			addPlayerEvent $(event.target).closest('button'), ->
-				showPlayer uri, $container
-
-loadPlayer = (uri, fn) -> $.getJSON uri, null, fn
-
 addPlayerEvent = ($button, fn) ->
 	uri = $button.data('uri')
 	data =
@@ -83,7 +71,7 @@ showGames = ($container) ->
 		$container.appendTo $LEFT
 		$container.find('.game a').click (event) ->
 			event.preventDefault()
-			clearTemplatesIn $RIGHT
+			resetTemplates()
 			showGame getLinkUri(event), $('#gameContainer')
 
 loadGames = (fn) -> $.getJSON '/games/', null, fn
@@ -91,22 +79,36 @@ loadGames = (fn) -> $.getJSON '/games/', null, fn
 showGame = (uri, $container) ->
 	loadGame = (uri, fn) -> $.getJSON uri, null, fn
 
-	loadTeam = (uri, $teamContainer, fn) -> $.getJSON uri, null, fn
+	loadPlayer = (uri, fn) -> $.getJSON uri, null, fn
 
-	loadGame uri, (game) ->
-		$container.html templates['game'](game)
-		$container.appendTo $LEFT
-		showTeamInGame game.teamA, $('#teamA')
-		showTeamInGame game.teamB, $('#teamB')
+	refreshGame = ->
+		loadGame uri, (game) ->
+			$container.html templates['game'](game)
+			$container.appendTo $LEFT
+			showTeamInGame game.teamA, $('#teamA')
+			showTeamInGame game.teamB, $('#teamB')
 
-showTeamInGame = (team, $container) ->
-	loadTeam = (uri, fn) -> $.getJSON uri, null, fn
+	showTeamInGame = (team, $container) ->
+		loadTeam = (uri, fn) -> $.getJSON uri, null, fn
+	
+		loadTeam team.uri, (team) ->
+			$container.html $(templates['teamingame'](team))
+			$container.find('.player a').click (event) ->
+				event.preventDefault()
+				showPlayer getLinkUri(event), $('#playerContainer')
 
-	loadTeam team.uri, (team) ->
-		$container.html $(templates['teamingame'](team))
-		$container.find('.player a').click (event) ->
-			event.preventDefault()
-			showPlayer getLinkUri(event), $('#playerContainer')
+	showPlayer = (uri, $container) ->
+		loadPlayer uri, (player) ->
+			$container.html templates['player'](player)
+			$container.appendTo $RIGHT
+			$container.find('button').data('uri', "#{uri}/events")
+			$container.find('button').click (event) ->
+				event.preventDefault()
+				addPlayerEvent $(event.target).closest('button'), ->
+					showPlayer uri, $container
+					refreshGame()
+
+	refreshGame()
 
 compileTemplates = ->
 	directive =
