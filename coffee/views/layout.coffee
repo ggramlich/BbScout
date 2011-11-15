@@ -32,17 +32,18 @@ html ->
 		div '#templates', ->
 			div '#teamsContainer', ->
 				div '#teams', ->
+					h2 'Teams'
 					div '#addteamContainer', ->
-						a '.add_team', -> 'add team'
+						a '.addteam', -> 'add team'
 					ul '.teams', ->
 						li '.team', ->
 							a ->
 
 			div '#teamContainer', ->
 				div '#team', ->
-					p '.name', ->
+					h2 '.name', ->
 					div '#addplayerContainer', ->
-						a '.add_player', -> 'add player'
+						a '.addplayer', -> 'add player'
 					ul '.players', ->
 						li '.player', ->
 							a ->

@@ -23,7 +23,7 @@ showTeams = ($container) ->
 		$container.find('.team a').click (event) ->
 			event.preventDefault()
 			showTeam $(event.target).attr('href'), $('#teamContainer')
-		$container.find('a.add_team').click (event) ->
+		$container.find('a.addteam').click (event) ->
 			event.preventDefault()
 			showAddTeamForm "/all_teams/"
 
@@ -40,7 +40,7 @@ showTeam = (uri, $container) ->
 	loadTeam uri, (team) ->
 		$container.html templates['team'](team)
 		$container.appendTo $('#middle')
-		$container.find('a').click (event) ->
+		$container.find('a.addplayer').click (event) ->
 			event.preventDefault()
 			showAddPlayerForm "#{uri}/all_players/"
 
@@ -60,7 +60,7 @@ loadGames = (fn) -> $.getJSON '/games/', null, fn
 
 compileTemplates = ->
 	directive =
-		'a.add_team@href': '/all_teams/'
+		'a.addteam@href': '/all_teams/'
 		'li':
 			'team<-teams':
 				'a': 'team.name'
@@ -69,7 +69,7 @@ compileTemplates = ->
 
 	directive =
 		'.name': 'name'
-		'a.add_player@href': 'uri'
+		'a.addplayer@href': 'uri'
 		'li':
 			'player<-players':
 				'span.number': 'player.number'
