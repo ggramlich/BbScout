@@ -22,6 +22,7 @@ createDefaultGame = ->
 describe 'The Rest server', ->
 	beforeEach ->
 		restServer.resetGames()
+		restServer.resetTeams()
 		restServer.start port
 		@addMatchers
 			toBeJson: -> @actual.headers['content-type'] == 'application/json'
@@ -83,6 +84,22 @@ describe 'The Rest server', ->
 				expect(actualGame.teamA).toEqual teamX
 				expect(actualGame.teamB).toEqual teamY
 				asyncSpecDone()
+			asyncSpecWait()
+
+		it 'should remove the teams from the all_games when they are used for a new game', ->
+			expect(restServer.getGame 1).toBeUndefined()
+			teamX = restServer.addTeam new model.Team 'Team X'
+			teamY = restServer.addTeam new model.Team 'Team Y'
+			teamZ = restServer.addTeam new model.Team 'Team Z'
+
+			teamNames = {teamA: 'Team X', teamB: 'Team Y'}
+			options = uri: games_uri, method: 'POST', json: teamNames
+			request options, (req, resp) ->
+				expect(resp.headers.location).toEqual game1_uri
+				request uri: all_teams_uri, (req, resp) ->
+					result = JSON.parse resp.body
+					expect(result).toEqual [renderer.teamRepresentation(teamZ)]
+					asyncSpecDone()
 			asyncSpecWait()
 
 	describe 'A single game resource', ->

@@ -66,9 +66,17 @@ class Renderer
 # because we use express.bodyParser()
 class Parser
 	createGame: (teamNames, existingTeams = {}) =>
-		teamA = existingTeams[teamNames.teamA] ? @createTeam teamNames.teamA
-		teamB = existingTeams[teamNames.teamB] ? @createTeam teamNames.teamB
+		teamA = @createOrPopExistingTeam teamNames.teamA, existingTeams
+		teamB = @createOrPopExistingTeam teamNames.teamB, existingTeams
 		new model.Game teamA, teamB
+
+	createOrPopExistingTeam: (teamName, existingTeams) =>
+		if existingTeams[teamName]?
+			team = existingTeams[teamName]
+			delete existingTeams[teamName]
+			team
+		else
+			@createTeam teamName
 
 	createTeam: (teamName) -> new model.Team teamName
 

@@ -46,7 +46,10 @@ class TeamsResource
 class AllTeamsResource
 	index: (request, response) ->
 		jsonResponse response, renderer.listTeams allTeamsList
-		
+
+	reset: ->
+		allTeamsList = []
+
 	addTeam: (team) ->
 		allTeamsList[team.name] = team
 

@@ -37,4 +37,5 @@ module.exports =
 	addGame: (game) -> games.addGame game
 	addTeam: (team) -> allTeams.addTeam team
 	resetGames: -> games.resetGames()
+	resetTeams: -> allTeams.reset()
 	getGame: (id) -> games.getGame id
