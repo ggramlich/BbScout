@@ -25,8 +25,6 @@ html ->
 
 		div '#left', ->
 
-		div '#middle', ->
-
 		div '#right', ->
 
 		div '#templates', ->
@@ -61,19 +59,21 @@ html ->
 								span '.name', ->
 				
 			div '#gamesContainer', ->
-				ul '#games', ->
-					li '.game', ->
-						a ->
-							span '.teamA', ->
-							text ' : '
-							span '.teamB', ->
-							text ' ('
-							span '.score', ->
-							text ')'
+				div '#games', ->
+					h2 'Games'
+					ul ->
+						li '.game', ->
+							a ->
+								span '.teamA', ->
+								text ' : '
+								span '.teamB', ->
+								text ' ('
+								span '.score', ->
+								text ')'
 
 			div '#gameContainer', ->
 				div '#game', ->
-					div '.game', ->
+					h2 '.game', ->
 						span '.teamA', ->
 						text ' : '
 						span '.teamB', ->

@@ -1,8 +1,7 @@
-$LEFT = $MIDDLE = $RIGHT = null
+$LEFT = $RIGHT = null
 
 $(document).ready ->
 	$LEFT = $('#left')
-	$MIDDLE = $('#middle')
 	$RIGHT = $('#right')
 	$('#templates').hide()
 	$('#templates').children('div').addClass('template')
@@ -48,13 +47,10 @@ showTeam = (uri, $container) ->
 
 	loadTeam uri, (team) ->
 		$container.html templates['team'](team)
-		$container.appendTo $MIDDLE
+		$container.appendTo $RIGHT
 		$container.find('a.addplayer').click (event) ->
 			event.preventDefault()
 			showAddPlayerForm "#{uri}/all_players/"
-#		$container.find('.player a').click (event) ->
-#			event.preventDefault()
-#			showPlayer getLinkUri(event), $('#playerContainer')
 
 	showAddPlayerForm = (addplayeruri) ->
 		$('#addplayerContainer').html templates['addplayer']('uri': addplayeruri)
@@ -99,7 +95,7 @@ showGame = (uri, $container) ->
 
 	loadGame uri, (game) ->
 		$container.html templates['game'](game)
-		$container.appendTo $MIDDLE
+		$container.appendTo $LEFT
 		showTeamInGame game.teamA, $('#teamA')
 		showTeamInGame game.teamB, $('#teamB')
 
