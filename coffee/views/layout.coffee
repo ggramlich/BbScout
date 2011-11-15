@@ -74,3 +74,25 @@ html ->
 					input type: 'text', name: 'name', size: '15' 
 					input type: 'submit', value: 'add'
 
+			div '#playerContainer', ->
+				div '#player', ->
+					h2 '.name', ->
+					p ->
+						span '.points', ->
+						text ' Points'
+					ul '.stats', ->
+						li '.Freethrow', ->
+							text 'FT'
+							span '.scored', ->
+							text ' of '
+							span '.attempted', ->
+						li '.Fieldgoal', ->
+							text 'FG'
+							span '.scored', ->
+							text ' of '
+							span '.attempted', ->
+						li 'Threepointer', ->
+							text '3P'
+							span '.scored', ->
+							text ' of '
+							span '.attempted', ->
