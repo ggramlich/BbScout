@@ -52,9 +52,9 @@ showTeam = (uri, $container) ->
 		$container.find('a.addplayer').click (event) ->
 			event.preventDefault()
 			showAddPlayerForm "#{uri}/all_players/"
-		$container.find('.player a').click (event) ->
-			event.preventDefault()
-			showPlayer getLinkUri(event), $('#playerContainer')
+#		$container.find('.player a').click (event) ->
+#			event.preventDefault()
+#			showPlayer getLinkUri(event), $('#playerContainer')
 
 	showAddPlayerForm = (addplayeruri) ->
 		$('#addplayerContainer').html templates['addplayer']('uri': addplayeruri)
@@ -65,8 +65,22 @@ showPlayer = (uri, $container) ->
 	loadPlayer uri, (player) ->
 		$container.html templates['player'](player)
 		$container.appendTo $RIGHT
-		
+		$container.find('button').data('uri', "#{uri}/events")
+		$container.find('button').click (event) ->
+			event.preventDefault()
+			addPlayerEvent $(event.target).closest('button'), ->
+				showPlayer uri, $container
+
 loadPlayer = (uri, fn) -> $.getJSON uri, null, fn
+
+addPlayerEvent = ($button, fn) ->
+	uri = $button.data('uri')
+	console.log uri
+	data =
+		action: $button.attr('class')
+		argument: $button.closest('li').attr('class')
+	console.log data
+	$.post uri, data, fn
 
 showGames = ($container) ->
 	loadGames (games) ->
@@ -88,12 +102,20 @@ compileTemplates = ->
 
 	directive =
 		'.name': 'name'
-		'a.addplayer@href': 'uri'
 		'li':
 			'player<-players':
 				'span.number': 'player.number'
 				'span.name': 'player.name'
 				'a@href': 'player.uri'
+	templates['teamingame'] = $('#teamingame').compile directive
+
+	directive =
+		'.name': 'name'
+		'a.addplayer@href': 'uri'
+		'li':
+			'player<-players':
+				'span.number': 'player.number'
+				'span.name': 'player.name'
 	templates['team'] = $('#team').compile directive
 
 	directive =

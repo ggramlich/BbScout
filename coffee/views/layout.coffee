@@ -46,6 +46,15 @@ html ->
 						a '.addplayer', -> 'add player'
 					ul '.players', ->
 						li '.player', ->
+							span '.number', ->
+							text ' '
+							span '.name', ->
+
+			div '#teamingameContainer', ->
+				div '#teamingame', ->
+					h2 '.name', ->
+					ul '.players', ->
+						li '.player', ->
 							a ->
 								span '.number', ->
 								text ' '
@@ -82,17 +91,26 @@ html ->
 						text ' Points'
 					ul '.stats', ->
 						li '.Freethrow', ->
-							text 'FT'
+							text 'FT '
+							button '.scores', -> '&otimes;'
+							button '.misses', -> '&empty;'
+							text ' '
 							span '.scored', ->
 							text ' of '
 							span '.attempted', ->
-						li '.Fieldgoal', ->
-							text 'FG'
+						li '.Fieldgoal ', ->
+							text 'FG '
+							button '.scores', -> '&otimes;'
+							button '.misses', -> '&empty;'
+							text ' '
 							span '.scored', ->
 							text ' of '
 							span '.attempted', ->
-						li 'Threepointer', ->
-							text '3P'
+						li 'Threepointer ', ->
+							text '3P '
+							button '.scores', -> '&otimes;'
+							button '.misses', -> '&empty;'
+							text ' '
 							span '.scored', ->
 							text ' of '
 							span '.attempted', ->
