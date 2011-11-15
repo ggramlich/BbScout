@@ -31,14 +31,16 @@ html ->
 
 		div '#templates', ->
 			div '#teamsContainer', ->
-				ul '#teams', ->
-					li '.team', ->
-						a ->
+				div '#teams', ->
+					div '#addteamContainer', ->
+						a '.add_team', -> 'add team'
+					ul '.teams', ->
+						li '.team', ->
+							a ->
 
 			div '#teamContainer', ->
 				div '#team', ->
 					p '.name', ->
-					p '.points', ->
 					div '#addplayerContainer', ->
 						a '.add_player', -> 'add player'
 					ul '.players', ->
@@ -64,5 +66,10 @@ html ->
 					input type: 'text', name: 'number', size: '2' 
 					input type: 'text', name: 'firstName', size: '15'
 					input type: 'text', name: 'lastName', size: '15'
+					input type: 'submit', value: 'add'
+
+			div '#addteam', ->
+				form '.addteam', action: '#', method: 'post', ->
+					input type: 'text', name: 'name', size: '15' 
 					input type: 'submit', value: 'add'
 

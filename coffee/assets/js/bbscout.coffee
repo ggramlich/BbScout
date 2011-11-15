@@ -20,9 +20,17 @@ showTeams = ($container) ->
 		data = teams: teams
 		$container.html templates['teams'](data)
 		$container.appendTo $('#left')
-		$container.find('a').click (event) ->
+		$container.find('.team a').click (event) ->
 			event.preventDefault()
 			showTeam $(event.target).attr('href'), $('#teamContainer')
+		$container.find('a.add_team').click (event) ->
+			event.preventDefault()
+			showAddTeamForm "/all_teams/"
+
+	showAddTeamForm = (addteamuri) ->
+		$('#addteamContainer').html templates['addteam']('uri': addteamuri)
+		$('form.addteam').ajaxForm 
+			success: (result) -> showTeams $container
 
 loadTeams = (fn) -> $.getJSON '/all_teams/', null, fn
 
@@ -52,6 +60,7 @@ loadGames = (fn) -> $.getJSON '/games/', null, fn
 
 compileTemplates = ->
 	directive =
+		'a.add_team@href': '/all_teams/'
 		'li':
 			'team<-teams':
 				'a': 'team.name'
@@ -60,7 +69,6 @@ compileTemplates = ->
 
 	directive =
 		'.name': 'name'
-		'.points': 'points'
 		'a.add_player@href': 'uri'
 		'li':
 			'player<-players':
@@ -83,3 +91,8 @@ compileTemplates = ->
 		'form@action': 'uri'
 	templates['addplayer'] = $('#addplayer').compile directive
 
+	directive =
+		'form@action': 'uri'
+	templates['addteam'] = $('#addteam').compile directive
+
+	
