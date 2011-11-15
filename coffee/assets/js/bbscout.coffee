@@ -9,11 +9,11 @@ $(document).ready ->
 	compileTemplates()
 	$('#teamslink').click ->
 		resetTemplates()
-		showTeams($('#teamsContainer'))
+		showTeams $('#teamsContainer')
 
 	$('#gameslink').click ->
 		resetTemplates()
-		showGames($('#gamesContainer'))
+		showGames $('#gamesContainer')
 
 templates = {}
 
@@ -75,11 +75,9 @@ loadPlayer = (uri, fn) -> $.getJSON uri, null, fn
 
 addPlayerEvent = ($button, fn) ->
 	uri = $button.data('uri')
-	console.log uri
 	data =
 		action: $button.attr('class')
 		argument: $button.closest('li').attr('class')
-	console.log data
 	$.post uri, data, fn
 
 showGames = ($container) ->
@@ -87,9 +85,32 @@ showGames = ($container) ->
 		data = games: games
 		$container.html templates['games'](data)
 		$container.appendTo $LEFT
+		$container.find('.game a').click (event) ->
+			event.preventDefault()
+			clearTemplatesIn $RIGHT
+			showGame getLinkUri(event), $('#gameContainer')
 
 loadGames = (fn) -> $.getJSON '/games/', null, fn
 
+showGame = (uri, $container) ->
+	loadGame = (uri, fn) -> $.getJSON uri, null, fn
+
+	loadTeam = (uri, $teamContainer, fn) -> $.getJSON uri, null, fn
+
+	loadGame uri, (game) ->
+		$container.html templates['game'](game)
+		$container.appendTo $MIDDLE
+		showTeamInGame game.teamA, $('#teamA')
+		showTeamInGame game.teamB, $('#teamB')
+
+showTeamInGame = (team, $container) ->
+	loadTeam = (uri, fn) -> $.getJSON uri, null, fn
+
+	loadTeam team.uri, (team) ->
+		$container.html $(templates['teamingame'](team))
+		$container.find('.player a').click (event) ->
+			event.preventDefault()
+			showPlayer getLinkUri(event), $('#playerContainer')
 
 compileTemplates = ->
 	directive =
@@ -129,14 +150,21 @@ compileTemplates = ->
 	templates['games'] = $('#games').compile directive
 
 	directive =
+		'span.teamA': 'teamA.name'
+		'span.teamB': 'teamB.name'
+		'span.score': 'score'
+
+	templates['game'] = $('#game').compile directive
+
+	directive =
 		'.name': 'name'
 		'span.points': 'points'
 		'li.Freethrow span.scored': 'stats.Freethrow.scored'
 		'li.Freethrow span.attempted': 'stats.Freethrow.attempted'
-		'li.Fieldgoal span.scored': 'stats.Freethrow.scored'
-		'li.Fieldgoal span.attempted': 'stats.Freethrow.attempted'
-		'li.Threepointer span.scored': 'stats.Freethrow.scored'
-		'li.Threepointer span.attempted': 'stats.Freethrow.attempted'
+		'li.Fieldgoal span.scored': 'stats.Fieldgoal.scored'
+		'li.Fieldgoal span.attempted': 'stats.Fieldgoal.attempted'
+		'li.Threepointer span.scored': 'stats.Threepointer.scored'
+		'li.Threepointer span.attempted': 'stats.Threepointer.attempted'
 
 	templates['player'] = $('#player').compile directive
 

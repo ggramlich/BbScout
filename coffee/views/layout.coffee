@@ -71,6 +71,19 @@ html ->
 							span '.score', ->
 							text ')'
 
+			div '#gameContainer', ->
+				div '#game', ->
+					div '.game', ->
+						span '.teamA', ->
+						text ' : '
+						span '.teamB', ->
+						text ' ('
+						span '.score', ->
+						text ')'
+					div '#teamA', ->
+					div '#teamB', ->
+					
+					
 			div '#addplayer', ->
 				form '.addplayer', action: '#', method: 'post', ->
 					input type: 'text', name: 'number', size: '2' 
@@ -98,7 +111,7 @@ html ->
 							span '.scored', ->
 							text ' of '
 							span '.attempted', ->
-						li '.Fieldgoal ', ->
+						li '.Fieldgoal', ->
 							text 'FG '
 							button '.scores', -> '&otimes;'
 							button '.misses', -> '&empty;'
@@ -106,7 +119,7 @@ html ->
 							span '.scored', ->
 							text ' of '
 							span '.attempted', ->
-						li 'Threepointer ', ->
+						li 'Threepointer', ->
 							text '3P '
 							button '.scores', -> '&otimes;'
 							button '.misses', -> '&empty;'
