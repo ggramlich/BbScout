@@ -1,5 +1,7 @@
 $LEFT = $RIGHT = null
 
+loadJSON = (uri, fn) -> $.getJSON uri, null, fn
+
 $(document).ready ->
 	$LEFT = $('#left')
 	$RIGHT = $('#right')
@@ -23,7 +25,7 @@ clearTemplatesIn = ($block) -> $('#templates').append $block.find('.template')
 getLinkUri = (event) -> $(event.target).closest('a').attr('href')
 
 showTeams = ($container) ->
-	loadTeams (teams) ->
+	loadJSON '/all_teams/', (teams) ->
 		data = teams: teams
 		$container.html templates['teams'](data)
 		$container.appendTo $LEFT
@@ -40,12 +42,8 @@ showTeams = ($container) ->
 		$('form.addteam').ajaxForm 
 			success: (result) -> showTeams $container
 
-loadTeams = (fn) -> $.getJSON '/all_teams/', null, fn
-
 showTeam = (uri, $container) ->
-	loadTeam = (uri, fn) -> $.getJSON uri, null, fn
-
-	loadTeam uri, (team) ->
+	loadJSON uri, (team) ->
 		$container.html templates['team'](team)
 		$container.appendTo $RIGHT
 		$container.find('a.addplayer').click (event) ->
@@ -65,7 +63,7 @@ addPlayerEvent = ($button, fn) ->
 	$.post uri, data, fn
 
 showGames = ($container) ->
-	loadGames (games) ->
+	loadJSON '/games/', (games) ->
 		data = games: games
 		$container.html templates['games'](data)
 		$container.appendTo $LEFT
@@ -74,31 +72,23 @@ showGames = ($container) ->
 			resetTemplates()
 			showGame getLinkUri(event), $('#gameContainer')
 
-loadGames = (fn) -> $.getJSON '/games/', null, fn
-
 showGame = (uri, $container) ->
-	loadGame = (uri, fn) -> $.getJSON uri, null, fn
-
-	loadPlayer = (uri, fn) -> $.getJSON uri, null, fn
-
 	refreshGame = ->
-		loadGame uri, (game) ->
+		loadJSON uri, (game) ->
 			$container.html templates['game'](game)
 			$container.appendTo $LEFT
 			showTeamInGame game.teamA, $('#teamA')
 			showTeamInGame game.teamB, $('#teamB')
 
 	showTeamInGame = (team, $container) ->
-		loadTeam = (uri, fn) -> $.getJSON uri, null, fn
-	
-		loadTeam team.uri, (team) ->
+		loadJSON team.uri, (team) ->
 			$container.html $(templates['teamingame'](team))
 			$container.find('.player a').click (event) ->
 				event.preventDefault()
 				showPlayer getLinkUri(event), $('#playerContainer')
 
 	showPlayer = (uri, $container) ->
-		loadPlayer uri, (player) ->
+		loadJSON uri, (player) ->
 			$container.html templates['player'](player)
 			$container.appendTo $RIGHT
 			$container.find('button').data('uri', "#{uri}/events")
