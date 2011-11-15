@@ -40,7 +40,7 @@ showTeams = ($container) ->
 	showAddTeamForm = (addteamuri) ->
 		$('#addteamContainer').html templates['addteam']('uri': addteamuri)
 		$('form.addteam').ajaxForm 
-			success: (result) -> showTeams $container
+			success: -> showTeams $container
 
 showTeam = (uri, $container) ->
 	loadJSON uri, (team) ->
@@ -53,7 +53,7 @@ showTeam = (uri, $container) ->
 	showAddPlayerForm = (addplayeruri) ->
 		$('#addplayerContainer').html templates['addplayer']('uri': addplayeruri)
 		$('form.addplayer').ajaxForm 
-			success: (result) -> showTeam uri, $container
+			success: -> showTeam uri, $container
 
 addPlayerEvent = ($button, fn) ->
 	uri = $button.data('uri')
@@ -63,14 +63,30 @@ addPlayerEvent = ($button, fn) ->
 	$.post uri, data, fn
 
 showGames = ($container) ->
-	loadJSON '/games/', (games) ->
-		data = games: games
+	gamesUri = '/games/'
+	loadJSON gamesUri, (games) ->
+		data =
+			uri: gamesUri
+			games: games
 		$container.html templates['games'](data)
 		$container.appendTo $LEFT
+		$container.find('a.addgame').click (event) ->
+			event.preventDefault()
+			showAddGameForm()
+
 		$container.find('.game a').click (event) ->
 			event.preventDefault()
 			resetTemplates()
 			showGame getLinkUri(event), $('#gameContainer')
+
+		showAddGameForm = ->
+			loadJSON 'all_teams', (teams) ->
+				data =
+					uri: gamesUri
+					teams: teams
+				$('#addgameContainer').html templates['addgame'](data)
+				$('form.addgame').ajaxForm 
+					success: -> showGames $container
 
 showGame = (uri, $container) ->
 	refreshGame = ->
@@ -128,6 +144,7 @@ compileTemplates = ->
 	templates['team'] = $('#team').compile directive
 
 	directive =
+		'a.addgame@href': 'uri'
 		'li':
 			'game<-games':
 				'a@href': 'game.uri'
@@ -164,4 +181,10 @@ compileTemplates = ->
 		'form@action': 'uri'
 	templates['addteam'] = $('#addteam').compile directive
 
-	
+	directive =
+		'form@action': 'uri'
+		'option':
+			'team<-teams':
+				'.': 'team.name'
+	templates['addgame'] = $('#addgame').compile directive
+

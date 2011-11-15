@@ -61,6 +61,8 @@ html ->
 			div '#gamesContainer', ->
 				div '#games', ->
 					h2 'Games'
+					div '#addgameContainer', ->
+						a '.addgame', -> 'addgame'
 					ul ->
 						li '.game', ->
 							a ->
@@ -84,6 +86,14 @@ html ->
 					div '#teamB', ->
 					
 					
+			div '#addgame', ->
+				form '.addgame', action: '#', method: 'post', ->
+					select size: '1', name: 'teamA', ->
+						option ''
+					select size: '1', name: 'teamB', ->
+						option ''
+					input type: 'submit', value: 'add'
+
 			div '#addplayer', ->
 				form '.addplayer', action: '#', method: 'post', ->
 					input type: 'text', name: 'number', size: '2' 
