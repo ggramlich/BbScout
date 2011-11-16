@@ -4,16 +4,11 @@
 
 !|library                     |
 |fitnesse.fixtures.EchoFixture|
+|RestScriptFixture|${BASE_URL}|
 
 Reset games and teams through the REST API
 
-!|script                             |
-|start |RestScriptFixture|${BASE_URL}|
-|delete|/games/*                     |
-|check |status code      |200        |
-|delete|/all_teams/*                 |
-|check |status code      |200        |
-
 !|script                            |
+|reset teams and games              |
 |start   |slim web driver|${BROWSER}|
 |open url|${BASE_URL}               |

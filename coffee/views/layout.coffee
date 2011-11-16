@@ -49,7 +49,7 @@ html ->
 							span '.name', ->
 
 			div '#teamingameContainer', ->
-				div '#teamingame', ->
+				div '.teamingame', ->
 					h2 '.name', ->
 					ul '.players', ->
 						li '.player', ->

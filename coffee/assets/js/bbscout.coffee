@@ -132,7 +132,7 @@ compileTemplates = ->
 				'span.number': 'player.number'
 				'span.name': 'player.name'
 				'a@href': 'player.uri'
-	templates['teamingame'] = $('#teamingame').compile directive
+	templates['teamingame'] = $('.teamingame').compile directive
 
 	directive =
 		'.name': 'name'

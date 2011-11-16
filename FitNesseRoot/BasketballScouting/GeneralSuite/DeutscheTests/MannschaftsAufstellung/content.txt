@@ -12,6 +12,9 @@ Spieler, deren Trikotnummern oder Mannschaft nicht bekannt ist, werden als "unbe
 ![ script
 Spieler Nummer 41 von XYZ ist Dirk Nowitzki
 Spieler Nummer 0 von XYZ ist Shawn Marion
+]!
+
+Hier gibt es noch Probleme mit dem Selenium Test
+
 Spieler Nummer 23 von XYZ ist unbekannt
 Spieler Nummer 41 von A ist unbekannt
-]!

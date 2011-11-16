@@ -1,0 +1,5 @@
+!|scenario|reset teams and games|
+|delete   |/games/*             |
+|check    |status code   |200   |
+|delete   |/all_teams/*         |
+|check    |status code   |200   |

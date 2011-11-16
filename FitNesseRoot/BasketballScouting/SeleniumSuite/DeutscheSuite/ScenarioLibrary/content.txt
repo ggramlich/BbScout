@@ -1,0 +1,158 @@
+!|scenario       |wait for _ and use it|element  |
+|wait for element|@element             |to appear|
+|use element     |@element                       |
+
+!|scenario        |select team _  |team |
+|use element      |css selector:ul.teams|
+|use inner element|link text:@team      |
+|click                                  |
+
+!|scenario        |enter _ into _ of _|value, name, main|
+|use element      |css selector:@main                   |
+|use inner element|name:@name                           |
+|enter text       |@value                               |
+
+!|scenario        |select _ from _ of _|value, name, main|
+|use element      |css selector:@main                    |
+|use inner element|name:@name                            |
+|select by text   |@value                                |
+|click                                                   |
+
+!|scenario       |create team _            |teamName    |
+|use element     |id:teamslink                          |
+|click                                                  |
+|wait for css selector:a.addteam and use it             |
+|click                                                  |
+|wait for css selector:form.addteam and use it          |
+|enter @teamName into name of form.addteam              |
+|send key        |ENTER                                 |
+|wait for element|css selector:form.addteam|to disappear|
+
+-----
+
+Spieler in Mannschaft
+
+!|scenario|Definiere die Mannschaftsaufstellung von _|Mannschaftsname|
+|create team @Mannschaftsname                                        |
+|select team @Mannschaftsname                                        |
+
+!|scenario|Mannschaftsliste|Trikot||Nachname||Vorname|
+|wait for css selector:a.addplayer and use it        |
+|click                                               |
+|wait for css selector:form.addplayer and use it     |
+|enter @Trikot into number of form.addplayer         |
+|enter @Vorname into firstName of form.addplayer     |
+|enter @Nachname into lastName of form.addplayer     |
+|send key |ENTER                                     |
+
+!|scenario  |Spieler Nummer _ von _ ist _                      |Trikot, Mannschaftsname, Spielername                     |
+|select team @Mannschaftsname                                                                                            |
+|use element|xpath:id('team')/ul[@class='players']/li[span/@class='number' and span/text()='@Trikot']/span[@class='name']|
+|check      |get text                                          |@Spielername                                             |
+
+|comment                                                                                                                                                                                                     |
+|Ein paar fehlgeschlagene Versuche, unbekannt zu erzeugen                                                                                                                                                    |
+|$name=     |execute script|var $li = $("#team ul.players li").filter(function() {return $(this).find("span.number").text() == '@Trikot'}); if ($li.length) return $li.find("span.name"); return 'unbekannt';|
+|check      |echo          |$name                                                                                |@Spielername                                                                               |
+|$name=     |execute script|var $li = $("id('team')/ul[@class='players']/li[span/@class='number' and span/text()='@Trikot']"); if ($li.length) return $li.find("span.name").text(); return 'unbekannt';      |
+|check      |echo          |$name                                                                                |@Spielername                                                                               |
+|use element|xpath:id('team')/ul[@class='players']/li[span/@class='number' and span/text()='@Trikot']/span[@class='name']                                                                                    |
+|check      |get text      |@Spielername                                                                                                                                                                     |
+|$player=   |find element  |xpath:id('team')/ul[@class='players']/li[span/@class='number' and span/text()='@Trikot']                                                                                         |
+
+----
+Spieler und Punkte
+
+!|scenario       |Gegeben ein Spieler mit _ Punkten|Punkte            |
+|reset teams and games                                                |
+|create team TeamA                                                    |
+|create team TeamB                                                    |
+|select team TeamA                                                    |
+|Mannschaftsliste|1                                ||Nachname||Vorname|
+|create game TeamA : TeamB                                            |
+|use player TeamA 1                                                   |
+
+
+|scenario        |use player _ _                                         |team, number                                        |
+|use element     |xpath://div[@class='teamingame' and h2/text()='@team']//li/a[span/@class='number' and span/text()='@number']|
+|click                                                                                                                        |
+|wait for element|id:player                                              |to appear                                           |
+
+
+!|scenario                              |create game _ : _                     |teamA, teamB                     |
+|use element                            |id:gameslink                                                            |
+|click                                                                                                           |
+|wait for css selector:a.addgame and use it                                                                      |
+|click                                                                                                           |
+|wait for css selector:form.addgame and use it                                                                   |
+|select @teamA from teamA of form.addgame                                                                        |
+|select @teamB from teamB of form.addgame                                                                        |
+|use element                            |css selector:form.addgame                                               |
+|use inner element                      |xpath://input[@type="submit"]                                           |
+|click                                                                                                           |
+|wait for xpath://a[span[@class="teamA"]/text() = "@teamA" and span[@class="teamB"]/text() = "@teamB"] and use it|
+|click                                                                                                           |
+|wait for element                       |id:game                               |to appear                        |
+
+!|scenario|wenn er einen Freiwurf trifft|
+|Player scores Freethrow                |
+
+!|scenario|wenn er einen Feldkorb trifft|
+|Player scores Fieldgoal                |
+
+!|scenario|wenn er einen Dreier trifft|
+|Player scores Threepointer           |
+
+!|scenario  |Player _ _                        |action, PointType                       |
+|use element|xpath://ul[@class='stats']/li[@class='@PointType']/button[@class='@action']|
+|click                                                                                  |
+|wait time  |200                                                                        |
+#|this can be improved, when we have some spinner that indicates waiting for ajax response|
+
+!|scenario  |dann hat er _ Punkte          |Punkte           |
+|use element|xpath://div[@id='player']//span[@class='points']|
+|check      |get text                      |@Punkte          |
+
+!|scenario|dann hat er _ Punkt|Punkte|
+|dann hat er @Punkte Punkte          |
+
+----
+Treffer und Fehlwürfe
+
+!|scenario|dann hat er _ von _ Freiwürfen getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
+|Player has scored @TrefferZahl of @WurfZahl Freethrow                                     |
+
+!|scenario|dann hat er _ von _ Feldkörben getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
+|Player has scored @TrefferZahl of @WurfZahl Fieldgoal                                     |
+
+!|scenario|dann hat er _ von _ Dreier getroffen|TrefferZahl, WurfZahl, TrefferArtPlural|
+|Player has scored @TrefferZahl of @WurfZahl Threepointer                              |
+
+!|scenario  |Player has scored _ of _ _          |scored, attempted, PointType          |
+|use element|xpath://ul[@class='stats']/li[@class='@PointType']/span[@class='scored']   |
+|check      |get text                            |@scored                               |
+|use element|xpath://ul[@class='stats']/li[@class='@PointType']/span[@class='attempted']|
+|check      |get text                            |@attempted                            |
+
+!|scenario|wenn er einen Freiwurf verfehlt|
+|Player misses Freethrow                  |
+
+!|scenario|wenn er einen Feldkorb verfehlt|
+|Player misses Fieldgoal                  |
+
+!|scenario|wenn er einen Dreier verfehlt|
+|Player misses Threepointer             |
+
+----
+Spielstand
+
+!|scenario|Das Spiel zwischen _ und _ beginnt|MannschaftA, MannschaftB|
+|create game @MannschaftA : @MannschaftB                              |
+
+!|scenario|Spieler _ _ trifft einen _|Mannschaft, Trikot, TrefferArt|
+|use player @Mannschaft @Trikot                                     |
+|wenn er einen @TrefferArt trifft                                   |
+
+!|scenario  |Es steht _        |Spielstand         |
+|use element|xpath:id('game')//span[@class='score']|
+|check      |get text          |@Spielstand        |
