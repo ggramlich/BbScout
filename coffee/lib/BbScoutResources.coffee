@@ -10,6 +10,7 @@ jsonResponse = (response, object) ->
 class GamesResource
 	# TODO make gamesList smarter (not simply an array)
 	gamesList = model.store.games
+	ALL_GAMES = {}
 
 	addGame: (game) ->
 		gamesList.push game
@@ -20,7 +21,9 @@ class GamesResource
 
 	load: (request, id, fn) => fn(null, @getGame id)
 
-	getGame: (id) -> gamesList[id - 1]
+	getGame: (id) ->
+		return ALL_GAMES if id == '*'
+		gamesList[id - 1]
 
 	index: (request, response) ->
 		jsonResponse response, renderer.listGames gamesList
@@ -33,6 +36,11 @@ class GamesResource
 	show: (request, response) ->
 		jsonResponse response, renderer.gameRepresentation request.game
 
+	destroy: (request, response) =>
+		if request.game == ALL_GAMES
+			@resetGames()
+			response.send 200
+
 class TeamsResource
 
 	load: (request, id, fn) ->
@@ -44,6 +52,8 @@ class TeamsResource
 		jsonResponse response, renderer.teamRepresentation request.team
 
 class AllTeamsResource
+	ALL_TEAMS = {}
+
 	index: (request, response) ->
 		jsonResponse response, renderer.listTeams allTeamsList
 
@@ -54,7 +64,8 @@ class AllTeamsResource
 		allTeamsList[team.name] = team
 
 	load: (request, name, fn) ->
-		team = allTeamsList[name]
+		team = ALL_TEAMS if name == '*'
+		team ?= allTeamsList[name]
 		fn(null, team)
 
 	show: (request, response) ->
@@ -65,6 +76,11 @@ class AllTeamsResource
 		team = parser.createTeam teamRepresentation.name
 		@addTeam team
 		response.redirect renderer.teamUri(team), 201
+
+	destroy: (request, response) =>
+		if request.all_team == ALL_TEAMS
+			@reset()
+			response.send 200
 
 class AllTeamsPlayersResource
 	load: (request, id, fn) ->

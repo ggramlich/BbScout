@@ -54,6 +54,16 @@ describe 'The Rest server', ->
 				asyncSpecDone()
 			asyncSpecWait()
 	
+		it 'allows to delete all games', ->
+			restServer.addGame createDefaultGame()
+			request uri: "#{games_uri}*", method:'DELETE', (req, resp) ->
+				expect(resp.statusCode).toEqual 200
+				request uri: games_uri, (req, resp) ->
+					result = JSON.parse resp.body
+					expect(result).toEqual []
+					asyncSpecDone()
+			asyncSpecWait()
+
 		it 'allows the creation of a new game', ->
 			expect(restServer.getGame 1).toBeUndefined()
 
@@ -148,6 +158,16 @@ describe 'The Rest server', ->
 				expect(result).toEqual expected
 				asyncSpecDone()
 			asyncSpecWait()
+
+		it 'allows to delete all teams', ->
+			request uri: "#{all_teams_uri}*", method:'DELETE', (req, resp) ->
+				expect(resp.statusCode).toEqual 200
+				request uri: all_teams_uri, (req, resp) ->
+					result = JSON.parse resp.body
+					expect(result).toEqual []
+					asyncSpecDone()
+			asyncSpecWait()
+
 
 		it 'allows to add a team', ->
 			team = name: 'New team'
