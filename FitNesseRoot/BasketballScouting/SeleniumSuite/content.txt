@@ -1,0 +1,8 @@
+!define TEST_SYSTEM {slim}
+!define BASE_URL {http://localhost:8000}
+!define BROWSER {firefox}
+
+!path ${FITNESSE_ROOTPATH}/lib/RestFixture/*
+!path ${FITNESSE_ROOTPATH}/lib/SlimWebDriver/*
+
+!contents -R2 -g -p -f -h

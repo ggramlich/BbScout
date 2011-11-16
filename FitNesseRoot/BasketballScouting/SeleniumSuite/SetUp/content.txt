@@ -1,0 +1,19 @@
+!|import                        |
+|smartrics.rest.fitnesse.fixture|
+|slimwebdriver                  |
+
+!|library                     |
+|fitnesse.fixtures.EchoFixture|
+
+Reset games and teams through the REST API
+
+!|script                             |
+|start |RestScriptFixture|${BASE_URL}|
+|delete|/games/*                     |
+|check |status code      |200        |
+|delete|/all_teams/*                 |
+|check |status code      |200        |
+
+!|script                            |
+|start   |slim web driver|${BROWSER}|
+|open url|${BASE_URL}               |
