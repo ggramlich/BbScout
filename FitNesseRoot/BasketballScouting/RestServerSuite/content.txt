@@ -2,6 +2,6 @@
 !define BASE_URL {http://localhost:8000}
 
 
-!path ${FITNESSE_ROOTPATH}/lib/*
+!path ${FITNESSE_ROOTPATH}/lib/RestFixture/*
 
 !contents -R2 -g -p -f -h
