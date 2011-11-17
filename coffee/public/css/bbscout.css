@@ -1,0 +1,108 @@
+body, html {
+    background: none repeat scroll 0 0 #A7A09A;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+}
+#wrap {
+    background: none repeat scroll 0 0 #99D;
+    margin: 0 auto;
+    width: 750px;
+}
+#header {
+    background: -moz-linear-gradient(center top , rgba(40, 40, 80, 0.3), rgba(46, 46, 80, 0.1)) repeat scroll 0 0 #DDE;
+}
+a {
+    text-decoration: none;
+    font-weight:bold;
+}
+#header h1 {
+	padding: 20px 40px 0px;
+}
+h1 {
+    font-size: 40px;
+}
+h2 {
+    margin: 0 0 1em;
+    font-size: 20px;
+}
+nav {
+    min-height: 25px;
+    padding: 10px 0;
+}
+ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+nav li {
+    background-image: -moz-linear-gradient(center top , rgba(40, 40, 80, 0.3), rgba(46, 46, 80, 0.1));
+    display: inline;
+    float: left;
+    min-height: 30px;
+    padding-top: 5px;
+    text-align: center;
+    vertical-align: middle;
+    width: 50%;
+}
+#left {
+    background: none repeat scroll 0 0 #AAD;
+    float: left;
+    padding: 10px;
+    width: 350px;
+    min-height: 500px;
+}
+#right {
+    float: right;
+    padding: 10px;
+    width: 350px;
+}
+#addteamContainer, #addplayerContainer, #addgameContainer {
+    background: -moz-linear-gradient(center top , rgba(40, 40, 80, 0.3), rgba(46, 46, 80, 0.1)) repeat scroll 0 0 #8888DD;
+    min-height: 29px;
+    padding: 10px 5px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+ul.teams, ul.players, ul.games {
+    padding:5px;
+}
+ul.teams li, ul.players li, ul.games li {
+    background: -moz-linear-gradient(center top , rgba(40, 40, 80, 0.1), rgba(46, 46, 80, 0)) repeat scroll 0 0 #8888DD;
+    padding: 5px 20px;
+}
+
+div.teamingame {
+    margin: 30px 0;
+}
+
+p.pointsContainer {
+    padding: 0px 30px 20px;
+    font-weight: bold;
+}
+
+ul.stats li span.category {
+    display: inline-block;
+    min-width: 40px;
+}
+
+ul.stats li button {
+    width: 40px;
+}
+
+ul.stats li span.scored {
+    margin-left: 10px;
+}
+
+#footer {
+    clear: both;
+    padding: 0;
+}
+#footer p {
+    margin: 0;
+}
+* html #footer {
+    height: 1px;
+}
+

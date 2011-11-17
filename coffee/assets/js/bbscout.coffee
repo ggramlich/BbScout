@@ -35,6 +35,7 @@ showTeams = ($container) ->
 			showTeam getLinkUri(event), $('#teamContainer')
 		$container.find('a.addteam').click (event) ->
 			event.preventDefault()
+			clearTemplatesIn $RIGHT
 			showAddTeamForm "/all_teams/"
 
 	showAddTeamForm = (addteamuri) ->

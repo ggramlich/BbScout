@@ -5,6 +5,7 @@ html ->
 		title "#{@title or 'BbScout'}"
 		meta(name: 'description', content: @description) if @description?
 
+		link rel: 'stylesheet', href: '/css/reset.css'
 		link rel: 'stylesheet', href: '/css/bbscout.css'
 
 		script src: '/js/jquery.js'
@@ -13,19 +14,18 @@ html ->
 		js 'bbscout.js'
 
 	body ->
-    header ->
-			h1 @title or 'Untitled'
-			nav ->
-				ul ->
-					li -> a '#teamslink', href: '#', -> 'Teams'
-					li -> a '#gameslink', href: '#', -> 'Games'
-		div '#main', ->
+		div '#wrap', ->
+			div '#header', ->
+				h1 @title or 'Untitled'
+				nav ->
+					ul ->
+						li -> a '#teamslink', href: '#', -> 'Teams'
+						li -> a '#gameslink', href: '#', -> 'Games'
+			div '#left', ->
 
-		div '#content', -> @body
-
-		div '#left', ->
-
-		div '#right', ->
+			div '#right', ->
+			
+			div '#footer', ->
 
 		div '#templates', ->
 			div '#teamsContainer', ->
@@ -62,8 +62,8 @@ html ->
 				div '#games', ->
 					h2 'Games'
 					div '#addgameContainer', ->
-						a '.addgame', -> 'addgame'
-					ul ->
+						a '.addgame', -> 'add game'
+					ul '.games', ->
 						li '.game', ->
 							a ->
 								span '.teamA', ->
@@ -109,12 +109,12 @@ html ->
 			div '#playerContainer', ->
 				div '#player', ->
 					h2 '.name', ->
-					p ->
+					p '.pointsContainer', ->
 						span '.points', ->
 						text ' Points'
 					ul '.stats', ->
 						li '.Freethrow', ->
-							text 'FT '
+							span '.category', -> 'FT '
 							button '.scores', -> '&otimes;'
 							button '.misses', -> '&empty;'
 							text ' '
@@ -122,7 +122,7 @@ html ->
 							text ' of '
 							span '.attempted', ->
 						li '.Fieldgoal', ->
-							text 'FG '
+							span '.category', -> 'FG '
 							button '.scores', -> '&otimes;'
 							button '.misses', -> '&empty;'
 							text ' '
@@ -130,7 +130,7 @@ html ->
 							text ' of '
 							span '.attempted', ->
 						li 'Threepointer', ->
-							text '3P '
+							span '.category', -> '3P '
 							button '.scores', -> '&otimes;'
 							button '.misses', -> '&empty;'
 							text ' '
