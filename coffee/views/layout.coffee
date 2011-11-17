@@ -69,7 +69,8 @@ html ->
 								span '.teamA', ->
 								text ' : '
 								span '.teamB', ->
-								text ' ('
+								br ->
+								text '('
 								span '.score', ->
 								text ')'
 
@@ -79,7 +80,8 @@ html ->
 						span '.teamA', ->
 						text ' : '
 						span '.teamB', ->
-						text ' ('
+						br ->
+						text '('
 						span '.score', ->
 						text ')'
 					div '#teamA', ->
